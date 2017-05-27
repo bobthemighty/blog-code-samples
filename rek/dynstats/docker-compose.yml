@@ -1,0 +1,17 @@
+version: "3"
+
+volumes:
+  rsyslog-dev:
+
+services:
+
+  rsyslog:
+    build: rsyslog
+    volumes:
+      - "rsyslog-dev:/dev"
+
+  test:
+    image: alpine
+    command: "logger hello world"
+    volumes:
+      - "rsyslog-dev:/dev"
