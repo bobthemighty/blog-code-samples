@@ -1,0 +1,19 @@
+{ "version": 1, "nomatch": "7", "type":"string",
+    "table":[
+        {"index": "FATAL", "value": 1},
+        {"index": "CRITICAL", "value": 2},
+        {"index": "ERROR", "value": 3},
+        {"index": "WARN", "value": 4},
+        {"index": "INFO", "value": 5},
+        {"index": "DEBUG", "value": 6},
+        {"index": "TRACE", "value": 7},
+        {"index": "fatal", "value": 1},
+        {"index": "critical", "value": 2},
+        {"index": "error", "value": 3},
+        {"index": "warn", "value": 4},
+        {"index": "info", "value": 5},
+        {"index": "debug", "value": 6},
+        {"index": "trace", "value": 7}
+
+    ]
+}

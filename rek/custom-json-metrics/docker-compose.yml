@@ -1,0 +1,42 @@
+version: "3"
+
+volumes:
+  customjsondev:
+
+services:
+
+  rsyslog:
+    build: rsyslog
+    volumes:
+      - "./rsyslog/rsyslog.conf:/etc/rsyslog.conf"
+      - "./rsyslog/error-level.lookup:/etc/error-level.lookup"
+      - "/tmp:/run/rsyslog"
+
+  api:
+    build: api
+    ports:
+      - "8192:8192"
+    depends_on:
+      - rsyslog
+    logging:
+      driver: syslog
+      options: 
+        syslog-address: "unixgram:///tmp/log.sock"
+
+  riemann:
+    build: riemann
+    ports:
+      - "5555:5555"
+    volumes:
+      - "./riemann/riemann.config:/app/etc/riemann.config"
+
+  logger:
+    depends_on:
+      - rsyslog
+    build: dummy-logger
+    logging:
+      driver: syslog
+      options: 
+        syslog-address: "unixgram:///tmp/log.sock"
+
+

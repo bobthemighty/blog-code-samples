@@ -1,0 +1,528 @@
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 43,
+syslogtag 'rsyslogd:', programname: 'rsyslogd', APP-NAME: 'rsyslogd', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:40:41', STRUCTURED-DATA: '-',
+msg: ' error during parsing file /etc/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+escaped msg: ' error during parsing file /etc/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+inputname: imuxsock rawmsg: '<43>Jun  9 16:40:41 rsyslogd: error during parsing file /etc/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+$!:{ "originalmsg": " error during parsing file \/etc\/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]", "unparsed-data": " file \/etc\/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 46,
+syslogtag 'rsyslogd:', programname: 'rsyslogd', APP-NAME: 'rsyslogd', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:40:41', STRUCTURED-DATA: '-',
+msg: '  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+escaped msg: '  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+inputname: imuxsock rawmsg: '<46>Jun  9 16:40:41 rsyslogd:  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+$!:{ "originalmsg": "  [origin software=\"rsyslogd\" swVersion=\"8.28.0.master\" x-pid=\"1\" x-info=\"http:\/\/www.rsyslog.com\"] start", "unparsed-data": " [origin software=\"rsyslogd\" swVersion=\"8.28.0.master\" x-pid=\"1\" x-info=\"http:\/\/www.rsyslog.com\"] start" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:40:42', STRUCTURED-DATA: '-',
+msg: ' + exec app'
+escaped msg: ' + exec app'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:40:42 3a8c7c693a26[643]: + exec app'
+$!:{ "originalmsg": " + exec app", "unparsed-data": "" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:40:56', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:40:56 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:40:56', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:40:56 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:00', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:00 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:00', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:00 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:03', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:03 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:03', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:03 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:09', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:09 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:09', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:09 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:23', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:23 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:23', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:23 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:27', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:27 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:27', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:27 3a8c7c693a26[643]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:28', STRUCTURED-DATA: '-',
+msg: ' Shutting down http server'
+escaped msg: ' Shutting down http server'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:28 3a8c7c693a26[643]: Shutting down http server'
+$!:{ "originalmsg": " Shutting down http server", "unparsed-data": " server" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[643]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '643', MSGID: '-',
+TIMESTAMP: 'Jun  9 16:41:28', STRUCTURED-DATA: '-',
+msg: ' Exiting'
+escaped msg: ' Exiting'
+inputname: imuxsock rawmsg: '<30>Jun  9 17:41:28 3a8c7c693a26[643]: Exiting'
+$!:{ "originalmsg": " Exiting", "unparsed-data": "" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 43,
+syslogtag 'rsyslogd:', programname: 'rsyslogd', APP-NAME: 'rsyslogd', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 11 20:01:56', STRUCTURED-DATA: '-',
+msg: ' error during parsing file /etc/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+escaped msg: ' error during parsing file /etc/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+inputname: imuxsock rawmsg: '<43>Jun 11 20:01:56 rsyslogd: error during parsing file /etc/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+$!:{ "originalmsg": " error during parsing file \/etc\/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]", "unparsed-data": " file \/etc\/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 46,
+syslogtag 'rsyslogd:', programname: 'rsyslogd', APP-NAME: 'rsyslogd', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 11 20:01:56', STRUCTURED-DATA: '-',
+msg: '  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+escaped msg: '  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+inputname: imuxsock rawmsg: '<46>Jun 11 20:01:56 rsyslogd:  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+$!:{ "originalmsg": "  [origin software=\"rsyslogd\" swVersion=\"8.28.0.master\" x-pid=\"1\" x-info=\"http:\/\/www.rsyslog.com\"] start", "unparsed-data": " [origin software=\"rsyslogd\" swVersion=\"8.28.0.master\" x-pid=\"1\" x-info=\"http:\/\/www.rsyslog.com\"] start" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 11 20:02:48', STRUCTURED-DATA: '-',
+msg: ' + exec app'
+escaped msg: ' + exec app'
+inputname: imuxsock rawmsg: '<30>Jun 11 21:02:48 3a8c7c693a26[673]: + exec app'
+$!:{ "originalmsg": " + exec app", "unparsed-data": "" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 11 20:05:38', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun 11 21:05:38 3a8c7c693a26[673]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 11 20:05:38', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+escaped msg: ' { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+inputname: imuxsock rawmsg: '<30>Jun 11 21:05:38 3a8c7c693a26[673]: { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app/response-time", "metric": 500, "attributes": { "status_code": "201" }}}}'
+$!:{ "body": { "@message": "Responded with 201 in 500ms", "@fields": { "_riemann_metric": { "service": "my-app\/response-time", "metric": 500, "attributes": { "status_code": "201" } } } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'root:', programname: 'root', APP-NAME: 'root', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 11 20:13:24', STRUCTURED-DATA: '-',
+msg: ' foo'
+escaped msg: ' foo'
+inputname: imuxsock rawmsg: '<13>Jun 11 21:13:24 root: foo'
+$!:{ "originalmsg": " foo", "unparsed-data": "" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:04:39', STRUCTURED-DATA: '-',
+msg: ' Shutting down http server'
+escaped msg: ' Shutting down http server'
+inputname: imuxsock rawmsg: '<30>Jun 12 08:04:39 3a8c7c693a26[673]: Shutting down http server'
+$!:{ "originalmsg": " Shutting down http server", "unparsed-data": " server" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:04:39', STRUCTURED-DATA: '-',
+msg: ' Exiting'
+escaped msg: ' Exiting'
+inputname: imuxsock rawmsg: '<30>Jun 12 08:04:39 3a8c7c693a26[673]: Exiting'
+$!:{ "originalmsg": " Exiting", "unparsed-data": "" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 43,
+syslogtag 'rsyslogd:', programname: 'rsyslogd', APP-NAME: 'rsyslogd', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:04:44', STRUCTURED-DATA: '-',
+msg: ' error during parsing file /etc/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+escaped msg: ' error during parsing file /etc/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+inputname: imuxsock rawmsg: '<43>Jun 12 07:04:44 rsyslogd: error during parsing file /etc/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+$!:{ "originalmsg": " error during parsing file \/etc\/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]", "unparsed-data": " file \/etc\/rsyslog.conf, on or before line 29: invalid character ';' - is there an invalid escape sequence somewhere? [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 46,
+syslogtag 'rsyslogd:', programname: 'rsyslogd', APP-NAME: 'rsyslogd', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:04:44', STRUCTURED-DATA: '-',
+msg: '  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+escaped msg: '  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+inputname: imuxsock rawmsg: '<46>Jun 12 07:04:44 rsyslogd:  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+$!:{ "originalmsg": "  [origin software=\"rsyslogd\" swVersion=\"8.28.0.master\" x-pid=\"1\" x-info=\"http:\/\/www.rsyslog.com\"] start", "unparsed-data": " [origin software=\"rsyslogd\" swVersion=\"8.28.0.master\" x-pid=\"1\" x-info=\"http:\/\/www.rsyslog.com\"] start" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:04:44', STRUCTURED-DATA: '-',
+msg: ' + exec app'
+escaped msg: ' + exec app'
+inputname: imuxsock rawmsg: '<30>Jun 12 08:04:44 3a8c7c693a26[673]: + exec app'
+$!:{ "originalmsg": " + exec app", "unparsed-data": "" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:06:34', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+escaped msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+inputname: imuxsock rawmsg: '<13>Jun 12 08:06:34 bob: { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+$!:{ "body": { "@message": "Hello world", "@fields": { "levelname": "info" } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:06:34', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+escaped msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+inputname: imuxsock rawmsg: '<13>Jun 12 08:06:34 bob: { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+$!:{ "body": { "@message": "Hello world", "@fields": { "levelname": "info" } }, "event.tags": [ "json" ], "severity": "7" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:06:34', STRUCTURED-DATA: '-',
+msg: ' '
+escaped msg: ' '
+inputname: imuxsock rawmsg: '<13>Jun 12 08:06:34 bob: '
+$!:{ "originalmsg": " ", "unparsed-data": "" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:07:12', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+escaped msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+inputname: imuxsock rawmsg: '<13>Jun 12 08:07:12 bob: { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+$!:{ "body": { "@message": "Hello world", "@fields": { "levelname": "info" } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:07:12', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+escaped msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+inputname: imuxsock rawmsg: '<13>Jun 12 08:07:12 bob: { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+$!:{ "body": { "@message": "Hello world", "@fields": { "levelname": "info" } }, "event.tags": [ "json" ], "severity": "7" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:07:12', STRUCTURED-DATA: '-',
+msg: ' '
+escaped msg: ' '
+inputname: imuxsock rawmsg: '<13>Jun 12 08:07:12 bob: '
+$!:{ "originalmsg": " ", "unparsed-data": "" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:09:10', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+escaped msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+inputname: imuxsock rawmsg: '<13>Jun 12 08:09:10 bob: { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+$!:{ "body": { "@message": "Hello world", "@fields": { "levelname": "info" } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:09:10', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+escaped msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+inputname: imuxsock rawmsg: '<13>Jun 12 08:09:10 bob: { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+$!:{ "body": { "@message": "Hello world", "@fields": { "levelname": "info" } }, "event.tags": [ "json" ], "severity": "7" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:09:31', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+escaped msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+inputname: imuxsock rawmsg: '<13>Jun 12 08:09:31 bob: { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+$!:{ "body": { "@message": "Hello world", "@fields": { "levelname": "info" } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:09:31', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+escaped msg: ' { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+inputname: imuxsock rawmsg: '<13>Jun 12 08:09:31 bob: { "@message": "Hello world", "@fields": { "levelname": "info" }}'
+$!:{ "body": { "@message": "Hello world", "@fields": { "levelname": "info" } }, "event.tags": [ "json" ], "severity": "7" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:15:30', STRUCTURED-DATA: '-',
+msg: ' Shutting down http server'
+escaped msg: ' Shutting down http server'
+inputname: imuxsock rawmsg: '<30>Jun 12 08:15:30 3a8c7c693a26[673]: Shutting down http server'
+$!:{ "originalmsg": " Shutting down http server", "unparsed-data": " server" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:15:30', STRUCTURED-DATA: '-',
+msg: ' Exiting'
+escaped msg: ' Exiting'
+inputname: imuxsock rawmsg: '<30>Jun 12 08:15:30 3a8c7c693a26[673]: Exiting'
+$!:{ "originalmsg": " Exiting", "unparsed-data": "" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 43,
+syslogtag 'rsyslogd:', programname: 'rsyslogd', APP-NAME: 'rsyslogd', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:15:35', STRUCTURED-DATA: '-',
+msg: ' error during parsing file /etc/rsyslog.conf, on or before line 34: invalid character '{' in expression - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+escaped msg: ' error during parsing file /etc/rsyslog.conf, on or before line 34: invalid character '{' in expression - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+inputname: imuxsock rawmsg: '<43>Jun 12 07:15:35 rsyslogd: error during parsing file /etc/rsyslog.conf, on or before line 34: invalid character '{' in expression - is there an invalid escape sequence somewhere? [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+$!:{ "originalmsg": " error during parsing file \/etc\/rsyslog.conf, on or before line 34: invalid character '{' in expression - is there an invalid escape sequence somewhere? [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]", "unparsed-data": " file \/etc\/rsyslog.conf, on or before line 34: invalid character '{' in expression - is there an invalid escape sequence somewhere? [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 43,
+syslogtag 'rsyslogd:', programname: 'rsyslogd', APP-NAME: 'rsyslogd', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:15:35', STRUCTURED-DATA: '-',
+msg: ' error during parsing file /etc/rsyslog.conf, on or before line 35: syntax error on token 'set' [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+escaped msg: ' error during parsing file /etc/rsyslog.conf, on or before line 35: syntax error on token 'set' [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+inputname: imuxsock rawmsg: '<43>Jun 12 07:15:35 rsyslogd: error during parsing file /etc/rsyslog.conf, on or before line 35: syntax error on token 'set' [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+$!:{ "originalmsg": " error during parsing file \/etc\/rsyslog.conf, on or before line 35: syntax error on token 'set' [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]", "unparsed-data": " file \/etc\/rsyslog.conf, on or before line 35: syntax error on token 'set' [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 43,
+syslogtag 'rsyslogd:', programname: 'rsyslogd', APP-NAME: 'rsyslogd', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:15:35', STRUCTURED-DATA: '-',
+msg: ' CONFIG ERROR: could not interpret master config file '/etc/rsyslog.conf'. [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+escaped msg: ' CONFIG ERROR: could not interpret master config file '/etc/rsyslog.conf'. [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+inputname: imuxsock rawmsg: '<43>Jun 12 07:15:35 rsyslogd: CONFIG ERROR: could not interpret master config file '/etc/rsyslog.conf'. [v8.28.0.master try http://www.rsyslog.com/e/2207 ]'
+$!:{ "originalmsg": " CONFIG ERROR: could not interpret master config file '\/etc\/rsyslog.conf'. [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]", "unparsed-data": " not interpret master config file '\/etc\/rsyslog.conf'. [v8.28.0.master try http:\/\/www.rsyslog.com\/e\/2207 ]" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 46,
+syslogtag 'rsyslogd:', programname: 'rsyslogd', APP-NAME: 'rsyslogd', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:15:35', STRUCTURED-DATA: '-',
+msg: '  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+escaped msg: '  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+inputname: imuxsock rawmsg: '<46>Jun 12 07:15:35 rsyslogd:  [origin software="rsyslogd" swVersion="8.28.0.master" x-pid="1" x-info="http://www.rsyslog.com"] start'
+$!:{ "originalmsg": "  [origin software=\"rsyslogd\" swVersion=\"8.28.0.master\" x-pid=\"1\" x-info=\"http:\/\/www.rsyslog.com\"] start", "unparsed-data": " [origin software=\"rsyslogd\" swVersion=\"8.28.0.master\" x-pid=\"1\" x-info=\"http:\/\/www.rsyslog.com\"] start" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:15:36', STRUCTURED-DATA: '-',
+msg: ' + exec app'
+escaped msg: ' + exec app'
+inputname: imuxsock rawmsg: '<30>Jun 12 08:15:36 3a8c7c693a26[673]: + exec app'
+$!:{ "originalmsg": " + exec app", "unparsed-data": "" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 13,
+syslogtag 'bob:', programname: 'bob', APP-NAME: 'bob', PROCID: '-', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:16:08', STRUCTURED-DATA: '-',
+msg: ' { "@message": "Hello world", "@fields": { "levelname": "error" }}'
+escaped msg: ' { "@message": "Hello world", "@fields": { "levelname": "error" }}'
+inputname: imuxsock rawmsg: '<13>Jun 12 08:16:08 bob: { "@message": "Hello world", "@fields": { "levelname": "error" }}'
+$!:{ "body": { "@message": "Hello world", "@fields": { "levelname": "error" } }, "event.tags": [ "json" ] }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:16:39', STRUCTURED-DATA: '-',
+msg: ' Shutting down http server'
+escaped msg: ' Shutting down http server'
+inputname: imuxsock rawmsg: '<30>Jun 12 08:16:39 3a8c7c693a26[673]: Shutting down http server'
+$!:{ "originalmsg": " Shutting down http server", "unparsed-data": " server" }
+$.:
+$/:
+
+Debug line with all properties:
+FROMHOST: '1955c1d3774e', fromhost-ip: '127.0.0.1', HOSTNAME: '1955c1d3774e', PRI: 30,
+syslogtag '3a8c7c693a26[673]:', programname: '3a8c7c693a26', APP-NAME: '3a8c7c693a26', PROCID: '673', MSGID: '-',
+TIMESTAMP: 'Jun 12 07:16:39', STRUCTURED-DATA: '-',
+msg: ' Exiting'
+escaped msg: ' Exiting'
+inputname: imuxsock rawmsg: '<30>Jun 12 08:16:39 3a8c7c693a26[673]: Exiting'
+$!:{ "originalmsg": " Exiting", "unparsed-data": "" }
+$.:
+$/:
+
