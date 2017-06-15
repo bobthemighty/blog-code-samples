@@ -1,0 +1,37 @@
+version: "3"
+
+volumes:
+  rsyslog-dev:
+
+services:
+
+  rsyslog:
+    build: rsyslog
+    volumes:
+      - "rsyslog-dev:/dev"
+      - "./rsyslog/rsyslog.conf:/etc/rsyslog.conf"
+
+  dummy:
+    build: dummy-logger
+    volumes:
+      - "rsyslog-dev:/dev"
+
+  riemann:
+    build: riemann
+    ports:
+      - "5555:5555"
+    volumes:
+      - "./riemann/riemann.config:/app/etc/riemann.config"
+
+  influx:
+    image: tutum/influx
+
+  grafana:
+    image: grafana:master
+
+  nginx:
+    build: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - "rsyslog-dev:/dev"
