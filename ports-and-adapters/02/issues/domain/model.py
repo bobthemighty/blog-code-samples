@@ -6,9 +6,6 @@ class IssueReporter:
         self.name = name
         self.email = email
 
-    def __composite_values__(self):
-        return self.name, self.email
-
 
 class Issue:
     def __init__(self, reporter: IssueReporter, description: str) -> None:

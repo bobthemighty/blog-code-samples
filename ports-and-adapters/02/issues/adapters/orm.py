@@ -81,6 +81,7 @@ class SqlAlchemy:
     def configure_mappings(self):
         self.metadata = MetaData(self.engine)
 
+        IssueReporter.__composite_values__ = lambda i: (i.name, i.email)
         issues = Table(
             'issues',
             self.metadata,
