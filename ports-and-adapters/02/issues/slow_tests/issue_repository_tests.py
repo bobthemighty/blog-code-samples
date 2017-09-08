@@ -1,6 +1,6 @@
 from issues.domain.model import Issue
 from issues.domain.commands import ReportIssueCommand
-from issues.services.handlers import ReportIssueHandler
+from issues.services import ReportIssueHandler
 from issues.adapters.orm import SqlAlchemy
 
 from expects import expect, equal, have_len

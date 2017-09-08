@@ -1,5 +1,5 @@
-from issues.tests.adapters import FakeUnitOfWork
-from issues.services.handlers import ReportIssueHandler
+from .adapters import FakeUnitOfWork
+from issues.services import ReportIssueHandler
 from issues.domain.commands import ReportIssueCommand
 
 from expects import expect, have_len, equal, be_true
