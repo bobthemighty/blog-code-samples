@@ -6,11 +6,7 @@ class IssueReporter:
         self.name = name
         self.email = email
 
-
 class Issue:
     def __init__(self, reporter: IssueReporter, description: str) -> None:
         self.description = description
         self.reporter = reporter
-
-
-

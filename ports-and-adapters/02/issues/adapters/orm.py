@@ -113,3 +113,25 @@ class SqlAlchemySessionContext:
 
     def __exit__(self, type, value, traceback):
         self._session_maker.remove()
+
+
+class IssueViewBuilder:
+
+    issue_view_model = namedtuple('issue_view', [
+        'id',
+        'description',
+        'reporter_email',
+        'reporter_name'
+        ])
+
+    def __init__(self, session):
+        self.session = session
+
+    def fetch(self, id):
+        session.execute('SELECT id, description, reporter_email, reporter_name '
+                    +   ' FROM issues '
+                    +   ' WHERE issue_id = :id',
+
+                          id=id)
+
+
