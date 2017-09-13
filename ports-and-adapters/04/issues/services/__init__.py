@@ -13,3 +13,15 @@ class ReportIssueHandler:
         with self.uowm.start() as tx:
             tx.issues.add(issue)
             tx.commit()
+
+
+class TriageIssueHandler:
+
+    def __init__(self, uowm: UnitOfWorkManager):
+        self.uowm = uowm
+
+    def handle (self, cmd):
+        with self.uowm.start() as tx:
+            issue = tx.issues.get(cmd.issue_id)
+            issue.triage(cmd.priority, cmd.category)
+            tx.commit()

@@ -1,5 +1,9 @@
 import abc
+from uuid import UUID
 from .model import Issue
+
+
+class IssueNotFoundException (Exception): pass
 
 
 class IssueLog(abc.ABC):
@@ -7,6 +11,16 @@ class IssueLog(abc.ABC):
     @abc.abstractmethod
     def add(self, issue: Issue) -> None:
         pass
+
+    @abc.abstractmethod
+    def _get(self, id: UUID) -> Issue:
+        pass
+
+    def get(self, id: UUID) -> Issue:
+        issue = self._get(id)
+        if issue is None:
+            raise IssueNotFoundException()
+        return issue
 
 
 class UnitOfWork(abc.ABC):

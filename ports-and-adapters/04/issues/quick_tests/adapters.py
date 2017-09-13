@@ -9,8 +9,10 @@ class FakeIssueLog(IssueLog):
     def add(self, issue):
         self.issues.append(issue)
 
-    def get(self, id):
-        return self.issues[id]
+    def _get(self, id):
+        for issue in self.issues:
+            if issue.id == id:
+                return issue
 
     def __len__(self):
         return len(self.issues)
