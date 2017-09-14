@@ -1,6 +1,6 @@
 import abc
-from enum import Enum
 from uuid import UUID
+from .messages import IssueState, IssuePriority, IssueAssignedToEngineer
 
 class IssueReporter:
 
@@ -11,25 +11,24 @@ class IssueReporter:
 
 class Issue:
 
-    class State(Enum):
-        AwaitingTriage = 0
-        AwaitingAssignment = 1
-
-    class Priority(Enum):
-        NotPrioritised = 0
-        Low = 1
-        Normal = 2
-        High = 3
-        Urgent = 4
-
-
     def __init__(self, issue_id:UUID, reporter: IssueReporter, description: str) -> None:
         self.id = issue_id
         self.description = description
         self.reporter = reporter
-        self.state = Issue.State.AwaitingTriage
+        self.state = IssueState.AwaitingTriage
+        self.events = []
 
-    def triage(self, priority: Priority, category: str) -> None:
+    def triage(self, priority: IssuePriority, category: str) -> None:
         self.priority = priority
         self.category = category
-        self.state = Issue.State.AwaitingAssignment
+        self.state = IssueState.AwaitingAssignment
+
+    def assign(self, assigned_to, assigned_by):
+        self.assigned_to = assigned_to
+        self.assigned_by = assigned_by
+        self.state = IssueState.ReadyForWork
+        self.events.append(IssueAssignedToEngineer(
+            self.id,
+            self.assigned_to,
+            self.assigned_by
+        ))

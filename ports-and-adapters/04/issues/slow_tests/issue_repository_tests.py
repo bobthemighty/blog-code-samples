@@ -1,5 +1,5 @@
 from issues.domain.model import Issue
-from issues.domain.commands import ReportIssueCommand
+from issues.domain.messages import ReportIssueCommand
 from issues.services import ReportIssueHandler
 from issues.adapters.orm import SqlAlchemy
 from issues.adapters.views import IssueViewBuilder

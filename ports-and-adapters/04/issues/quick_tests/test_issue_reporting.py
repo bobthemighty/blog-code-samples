@@ -2,7 +2,7 @@ import uuid
 
 from .adapters import FakeUnitOfWork
 from issues.services import ReportIssueHandler
-from issues.domain.commands import ReportIssueCommand
+from issues.domain.messages import ReportIssueCommand, IssueState, IssuePriority
 from issues.domain.model import Issue
 
 from expects import expect, have_len, equal, be_true
@@ -32,7 +32,7 @@ class When_reporting_an_issue:
         expect(self.uow.issues[0].id).to(equal(id))
 
     def it_should_be_awaiting_triage(self):
-        expect(self.uow.issues[0].state).to(equal(Issue.State.AwaitingTriage))
+        expect(self.uow.issues[0].state).to(equal(IssueState.AwaitingTriage))
 
     def it_should_have_recorded_the_issuer(self):
         expect(self.uow.issues[0].reporter.name).to(equal(name))
