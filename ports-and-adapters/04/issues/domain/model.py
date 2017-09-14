@@ -14,6 +14,21 @@ class IssueReporter:
         self.email = email
 
 
+class Assignment:
+
+    def __init__(self, assigned_to, assigned_by):
+        self.assigned_to = assigned_to
+        self.assigned_by = assigned_by
+
+    def is_reassignment_from(self, other):
+        if other is None:
+            return False
+        if other.assigned_to == self.assigned_to:
+            return False
+        return True
+
+
+
 class Issue:
 
     def __init__(self, issue_id:UUID, reporter: IssueReporter, description: str) -> None:
@@ -22,8 +37,7 @@ class Issue:
         self.reporter = reporter
         self.state = IssueState.AwaitingTriage
         self.events = []
-        self.assigned_to = None
-        self.assigned_by = None
+        self.assignment = None
 
     def triage(self, priority: IssuePriority, category: str) -> None:
         self.priority = priority
@@ -38,17 +52,16 @@ class Issue:
         return True
 
     def assign(self, assigned_to, assigned_by):
-        previous_assignee = self.assigned_to
+        previous_assignment = self.assignment
+        self.assignment = Assignment(assigned_to, assigned_by)
 
-        self.assigned_to = assigned_to
-        self.assigned_by = assigned_by
         self.state = IssueState.ReadyForWork
 
-        if self._was_reassigned(previous_assignee):
-            self.events.append(IssueReassigned(self.id, previous_assignee))
+        if self.assignment.is_reassignment_from(previous_assignment):
+            self.events.append(IssueReassigned(self.id, previous_assignment.assigned_to))
 
         self.events.append(IssueAssignedToEngineer(
             self.id,
-            self.assigned_to,
-            self.assigned_by
+            assigned_to,
+            assigned_by
         ))

@@ -32,10 +32,10 @@ class When_assigning_an_issue (With_a_triaged_issue):
         handler.handle(cmd)
 
     def the_issue_should_be_assigned_to_percy(self):
-        expect(self.issue.assigned_to).to(equal(self.assigned_to))
+        expect(self.issue.assignment.assigned_to).to(equal(self.assigned_to))
 
     def the_issue_should_have_been_assigned_by_norman(self):
-        expect(self.issue.assigned_by).to(equal(self.assigned_by))
+        expect(self.issue.assignment.assigned_by).to(equal(self.assigned_by))
 
     def the_issue_should_be_ready_for_work(self):
         expect(self.issue.state).to(equal(IssueState.ReadyForWork))
