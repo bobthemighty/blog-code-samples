@@ -39,3 +39,8 @@ class IssueAssignedToEngineer(NamedTuple):
     issue_id: UUID
     assigned_to: str
     assigned_by: str
+
+
+class IssueReassigned(NamedTuple):
+    issue_id: UUID
+    previous_assignee: str

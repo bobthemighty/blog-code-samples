@@ -8,6 +8,7 @@ class With_an_empty_unit_of_work:
     def given_a_unit_of_work(self):
         self.uow = FakeUnitOfWork()
 
+
 class With_a_new_issue (With_an_empty_unit_of_work):
 
     def given_a_new_issue(self):
@@ -15,6 +16,7 @@ class With_a_new_issue (With_an_empty_unit_of_work):
         self.issue_id = uuid.uuid4()
         self.issue = Issue(self.issue_id, reporter, 'how do I even?')
         self.uow.issues.add(self.issue)
+
 
 class With_a_triaged_issue (With_a_new_issue):
 

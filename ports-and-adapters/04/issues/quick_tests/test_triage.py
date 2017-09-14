@@ -31,3 +31,5 @@ class When_triaging_an_issue (With_a_new_issue):
 
     def it_should_have_committed_the_unit_of_work(self):
         expect(self.uow.was_committed).to(be_true)
+
+
