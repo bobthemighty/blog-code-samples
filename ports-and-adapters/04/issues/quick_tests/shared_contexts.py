@@ -22,3 +22,12 @@ class With_a_triaged_issue (With_a_new_issue):
 
     def given_a_triaged_issue(self):
         self.issue.triage(IssuePriority.Low, 'uncategorised')
+
+
+class With_assigned_issue (With_a_triaged_issue):
+
+    assigned_by = 'fred@example.org'
+    assigned_to = 'mary@example.org'
+
+    def given_an_assigned_issue(self):
+        self.issue.assign(assigned_to, assigned_by)

@@ -1,10 +1,10 @@
 import uuid
 
-from .adapters import FakeUnitOfWork
+from .adapters import FakeUnitOfWork, FakeEmailSender, FakeViewBuilder
 from .shared_contexts import With_a_triaged_issue
 from .matchers import have_raised
 
-from issues.services import AssignIssueHandler
+from issues.services import AssignIssueHandler, IssueAssignedHandler
 from issues.domain.messages import (
         AssignIssueCommand,
         IssueAssignedToEngineer,
@@ -78,3 +78,40 @@ class When_reassigning_an_issue (With_a_triaged_issue):
                 self.issue_id,
                 self.assigned_to
             )))
+
+
+class When_an_issue_is_assigned:
+
+    issue_id = uuid.uuid4()
+    assigned_to = 'barry@example.org'
+    assigned_by = 'helga@example.org'
+
+    def given_a_view_model_and_emailer(self):
+        self.view_builder = FakeViewBuilder({
+            'description': 'a bad thing happened',
+            'reporter_email': 'reporter@example.org',
+            'reported_name': 'Reporty McReportface'
+            })
+
+        self.emailer = FakeEmailSender()
+
+    def because_we_raise_issue_assigned(self):
+        evt = IssueAssignedToEngineer(
+                self.issue_id,
+                self.assigned_to,
+                self.assigned_by)
+
+        handler = IssueAssignedHandler(self.view_builder, self.emailer)
+        handler.handle(evt)
+
+    def it_should_send_an_email(self):
+        expect(self.emailer.sent).to(have_len(1))
+
+    def it_should_have_the_correct_subject(self):
+        expect(self.emailer.sent[0].subject).to(
+            equal('Hi barry@example.org - you\'ve been assigned an issue'))
+
+    def it_should_be_to_the_correct_recipient(self):
+        expect(self.emailer.sent[0].recipient).to(
+            equal(self.assigned_to))
+

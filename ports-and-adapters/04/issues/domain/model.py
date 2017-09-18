@@ -37,23 +37,22 @@ class Issue:
         self.reporter = reporter
         self.state = IssueState.AwaitingTriage
         self.events = []
-        self.assignment = None
+        self._assignments = []
+
+    @property
+    def assignment(self):
+        if len(self._assignments) == 0:
+            return None
+        return self._assignments[-1]
 
     def triage(self, priority: IssuePriority, category: str) -> None:
         self.priority = priority
         self.category = category
         self.state = IssueState.AwaitingAssignment
 
-    def _was_reassigned(self, previous):
-        if previous is None:
-            return False
-        if previous == self.assigned_to:
-            return False
-        return True
-
     def assign(self, assigned_to, assigned_by):
         previous_assignment = self.assignment
-        self.assignment = Assignment(assigned_to, assigned_by)
+        self._assignments.append(Assignment(assigned_to, assigned_by))
 
         self.state = IssueState.ReadyForWork
 
