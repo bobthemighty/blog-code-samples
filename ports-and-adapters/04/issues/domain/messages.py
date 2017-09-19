@@ -66,6 +66,12 @@ class AssignIssueCommand(NamedTuple):
     assigned_by: str
 
 
+@command
+class PickIssueCommand(NamedTuple):
+    issue_id: UUID
+    picked_by: str
+
+
 @event
 class IssueAssignedToEngineer(NamedTuple):
     issue_id: UUID

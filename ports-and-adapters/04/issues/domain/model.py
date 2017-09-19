@@ -50,8 +50,10 @@ class Issue:
         self.category = category
         self.state = IssueState.AwaitingAssignment
 
-    def assign(self, assigned_to, assigned_by):
+    def assign(self, assigned_to, assigned_by=None):
         previous_assignment = self.assignment
+        assigned_by = assigned_by or assigned_to
+
         self._assignments.append(Assignment(assigned_to, assigned_by))
 
         self.state = IssueState.ReadyForWork
@@ -59,8 +61,9 @@ class Issue:
         if self.assignment.is_reassignment_from(previous_assignment):
             self.events.append(IssueReassigned(self.id, previous_assignment.assigned_to))
 
-        self.events.append(IssueAssignedToEngineer(
-            self.id,
-            assigned_to,
-            assigned_by
-        ))
+        if assigned_to != assigned_by:
+            self.events.append(IssueAssignedToEngineer(
+                self.id,
+                assigned_to,
+                assigned_by
+            ))

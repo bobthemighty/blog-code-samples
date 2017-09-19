@@ -4,13 +4,18 @@ from .adapters import FakeUnitOfWork, FakeEmailSender, FakeViewBuilder
 from .shared_contexts import With_a_triaged_issue
 from .matchers import have_raised
 
-from issues.services import AssignIssueHandler, IssueAssignedHandler
+from issues.services import (
+        AssignIssueHandler,
+        IssueAssignedHandler,
+        PickIssueHandler
+    )
 from issues.domain.messages import (
         AssignIssueCommand,
         IssueAssignedToEngineer,
         IssueReassigned,
         IssueState,
-        IssuePriority
+        IssuePriority,
+        PickIssueCommand
     )
 from issues.domain.model import Issue, IssueReporter
 
@@ -51,6 +56,30 @@ class When_assigning_an_issue (With_a_triaged_issue):
                 self.assigned_by
             )))
 
+
+class When_picking_an_issue (With_a_triaged_issue):
+
+    picked_by = 'percy@example.org'
+
+    def because_we_pick_the_issue(self):
+        handler = PickIssueHandler(self.uow)
+        cmd = PickIssueCommand(
+                self.issue_id,
+                self.picked_by)
+
+        handler.handle(cmd)
+
+    def the_issue_should_be_assigned_to_percy(self):
+        expect(self.issue.assignment.assigned_to).to(equal(self.picked_by))
+
+    def the_issue_should_be_ready_for_work(self):
+        expect(self.issue.state).to(equal(IssueState.ReadyForWork))
+
+    def it_should_have_committed_the_unit_of_work(self):
+        expect(self.uow.was_committed).to(be_true)
+
+    def it_should_not_have_raised_issue_assigned(self):
+        expect(self.issue.events).to(have_len(0))
 
 class When_reassigning_an_issue (With_a_triaged_issue):
 
@@ -114,4 +143,3 @@ class When_an_issue_is_assigned:
     def it_should_be_to_the_correct_recipient(self):
         expect(self.emailer.sent[0].recipient).to(
             equal(self.assigned_to))
-

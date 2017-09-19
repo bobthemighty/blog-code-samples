@@ -29,6 +29,18 @@ class TriageIssueHandler:
             tx.commit()
 
 
+class PickIssueHandler:
+
+    def __init__(self, uowm: UnitOfWorkManager):
+        self.uowm = uowm
+
+    def handle (self, cmd):
+        with self.uowm.start() as tx:
+            issue = tx.issues.get(cmd.issue_id)
+            issue.assign(cmd.picked_by)
+            tx.commit()
+
+
 class AssignIssueHandler:
 
     def __init__(self, uowm: UnitOfWorkManager):

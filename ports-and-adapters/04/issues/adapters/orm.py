@@ -67,6 +67,7 @@ class SqlAlchemyUnitOfWork(UnitOfWork):
         self.session.commit()
 
     def rollback(self):
+        self.flushed_events = []
         self.session.rollback()
 
     def setup_events(self, session, entity):
