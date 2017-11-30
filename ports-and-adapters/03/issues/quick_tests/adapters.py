@@ -1,4 +1,4 @@
-from issues.domain.ports import IssueLog, UnitOfWorkManager, UnitOfWork
+from issues.domain.ports import IssueLog, UnitOfWork
 
 
 class FakeIssueLog(IssueLog):
@@ -19,7 +19,7 @@ class FakeIssueLog(IssueLog):
         return self.issues[idx]
 
 
-class FakeUnitOfWork(UnitOfWork, UnitOfWorkManager):
+class FakeUnitOfWork(UnitOfWork):
 
     def __init__(self):
         self._issues = FakeIssueLog()

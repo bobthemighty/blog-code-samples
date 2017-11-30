@@ -16,17 +16,9 @@ from sqlalchemy_utils.types.uuid import UUIDType
 from issues.domain.model import Issue, IssueReporter
 from issues.domain.ports import (
     UnitOfWork,
-    UnitOfWorkManager,
 )
 
 
-class SqlAlchemyUnitOfWorkManager(UnitOfWorkManager):
-
-    def __init__(self, session_maker):
-        self.session_maker = session_maker
-
-    def start(self):
-        return SqlAlchemyUnitOfWork(self.session_maker)
 
 
 class IssueRepository:
@@ -40,11 +32,11 @@ class IssueRepository:
 
 class SqlAlchemyUnitOfWork(UnitOfWork):
 
-    def __init__(self, sessionfactory):
-        self.sessionfactory = sessionfactory
+    def __init__(self, session_maker):
+        self.session_maker = session_maker
 
     def __enter__(self):
-        self.session = self.sessionfactory()
+        self.session = self.session_maker()
         return self
 
     def __exit__(self, type, value, traceback):
@@ -69,9 +61,8 @@ class SqlAlchemy:
             sessionmaker(self.engine),
         )
 
-    @property
-    def unit_of_work_manager(self):
-        return SqlAlchemyUnitOfWorkManager(self._session_maker)
+    def get_unit_of_work(self):
+        return SqlAlchemyUnitOfWork(self._session_maker)
 
     def recreate_schema(self):
         drop_database(self.engine.url)
