@@ -1,7 +1,7 @@
 import uuid
 
 from .adapters import FakeUnitOfWork
-from issues.services import ReportIssueHandler
+from issues.services import handle_report_issue
 from issues.domain.commands import ReportIssueCommand
 
 from expects import expect, have_len, equal, be_true
@@ -19,10 +19,8 @@ class When_reporting_an_issue:
         self.uow = FakeUnitOfWork()
 
     def because_we_report_a_new_issue(self):
-        handler = ReportIssueHandler(self.uow)
         cmd = ReportIssueCommand(id, name, email, desc)
-
-        handler.handle(cmd)
+        handle_report_issue(self.uow, cmd)
 
     def it_should_have_recorded_the_id(self):
         expect(self.uow.issues[0].id).to(equal(id))
