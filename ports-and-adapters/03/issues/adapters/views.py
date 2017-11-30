@@ -26,28 +26,15 @@ def view_issue(session, id):
 
 
 
-class IssueListBuilder:
+def list_issues(session):
+    query = session.execute(
+        'SELECT issue_id, description, reporter_email, reporter_name FROM issues'
+    )
 
-    _q = """SELECT issue_id,
-                 description,
-                 reporter_email,
-                 reporter_name
-            FROM issues"""
+    result = []
+    for r in query.fetchall():
+        r = read_uuid(r, 'issue_id')
+        result.append(r)
 
-    def __init__(self, session):
-        self.session = session
-
-    def fetch(self):
-        query = self.session.execute(
-                    'SELECT issue_id, description, reporter_email, reporter_name '
-                    +   ' FROM issues')
-
-        result = []
-        for r in query.fetchall():
-            r = read_uuid(r, 'issue_id')
-            result.append(r)
-
-        return result
-
-
+    return result
 

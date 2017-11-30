@@ -1,7 +1,7 @@
 import uuid
 from flask import Flask, request, jsonify
 from issues.adapters.orm import SqlAlchemy
-from issues.adapters.views import view_issue, IssueListBuilder
+from issues.adapters.views import view_issue, list_issues
 
 from issues.services import handle_report_issue
 from issues.domain.commands import ReportIssueCommand
@@ -32,6 +32,6 @@ def get_issue(issue_id):
 @app.route('/issues', methods=['GET'])
 def list_issues():
     session = db.get_session()
-    view_builder = IssueListBuilder(session)
+    view_builder = list_issues(session)
     view = view_builder.fetch()
     return jsonify(view)
