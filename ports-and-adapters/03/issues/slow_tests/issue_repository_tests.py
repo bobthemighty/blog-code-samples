@@ -2,7 +2,7 @@ from issues.domain.model import Issue
 from issues.domain.commands import ReportIssueCommand
 from issues.services import handle_report_issue
 from issues.adapters.orm import SqlAlchemy
-from issues.adapters.views import IssueViewBuilder
+from issues.adapters.views import view_issue
 
 import uuid
 
@@ -26,8 +26,7 @@ class When_we_load_a_persisted_issue:
         handle_report_issue(self.db.unit_of_work_manager, cmd)
 
     def because_we_load_the_issues(self):
-        view_builder = IssueViewBuilder(self.db.get_session())
-        self.issue = view_builder.fetch(self.issue_id)
+        self.issue = view_issue(self.db.get_session(), self.issue_id)
 
     def it_should_have_the_correct_id(self):
         # expect(self.issue['id']).to(equal(self.issue_id))
