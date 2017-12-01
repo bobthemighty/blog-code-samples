@@ -25,13 +25,6 @@ from issues.domain.ports import (
 
 SessionFactory = typing.Callable[[], sqlalchemy.orm.Session]
 
-class SqlAlchemyUnitOfWorkManager(UnitOfWorkManager):
-
-    def __init__(self, session_maker:SessionFactory, bus:MessageBus) -> None:
-        self.session_maker = session_maker
-        self.bus = bus
-
-
 
 class IssueRepository(IssueLog):
 
