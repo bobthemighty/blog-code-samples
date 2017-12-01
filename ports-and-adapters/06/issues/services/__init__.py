@@ -6,7 +6,6 @@ from issues.domain import emails, messages
 def report_issue (start_uow, cmd):
     reporter = IssueReporter(cmd.reporter_name, cmd.reporter_email)
     issue = Issue(cmd.issue_id, reporter, cmd.problem_description)
-
     with start_uow() as tx:
         tx.issues.add(issue)
         tx.commit()
@@ -29,10 +28,9 @@ def assign_issue (start_uow, cmd):
         issue.assign(cmd.assigned_to, cmd.assigned_by)
         tx.commit()
 
-def on_issue_assigned_to_me(view_issue, sender, evt):
+def on_issue_assigned_to_engineer(view_issue, sender, evt):
     data = view_issue(evt.issue_id)
     data.update(**evt._asdict())
-    print(data)
 
     request = emails.MailRequest(
         emails.IssueAssignedToMe,

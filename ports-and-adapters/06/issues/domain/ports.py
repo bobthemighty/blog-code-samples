@@ -65,9 +65,9 @@ class MessageBus:
         self.handlers = defaultdict(list)
 
     def handle(self, msg):
-        subscribers = self.handlers.get(type(msg))
-        for handle in handlers:
-            subscriber(msg)
+        subscribers = self.handlers[type(msg).__name__]
+        for handle in subscribers:
+            handle(msg)
 
     def register(self, msg, handler):
-        self.handlers[type(msg)].append(handler)
+        self.handlers[msg.__name__].append(handler)
