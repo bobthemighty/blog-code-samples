@@ -23,7 +23,7 @@ class When_we_load_a_persisted_issue:
             'fred@example.org',
             'forgot my password again'
         )
-        handle_report_issue(self.db.get_unit_of_work(), cmd)
+        handle_report_issue(self.db.get_unit_of_work, cmd)
 
     def because_we_load_the_issues(self):
         self.issue = view_issue(self.db.start_session(), self.issue_id)

@@ -18,7 +18,7 @@ db.create_schema()
 def report_issue():
     issue_id = uuid.uuid4()
     cmd = ReportIssueCommand(issue_id=issue_id, **request.get_json())
-    handle_report_issue(db.get_unit_of_work(), cmd)
+    handle_report_issue(db.get_unit_of_work, cmd)
     return "", 201, {"Location": "/issues/" + str(issue_id) }
 
 

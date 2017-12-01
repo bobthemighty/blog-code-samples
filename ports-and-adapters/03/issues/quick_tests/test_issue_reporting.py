@@ -20,7 +20,7 @@ class When_reporting_an_issue:
 
     def because_we_report_a_new_issue(self):
         cmd = ReportIssueCommand(id, name, email, desc)
-        handle_report_issue(self.uow, cmd)
+        handle_report_issue(lambda: self.uow, cmd)
 
     def it_should_have_recorded_the_id(self):
         expect(self.uow.issues[0].id).to(equal(id))
