@@ -19,18 +19,18 @@ def report_issue():
     issue_id = uuid.uuid4()
     cmd = ReportIssueCommand(issue_id=issue_id, **request.get_json())
     handle_report_issue(db.get_unit_of_work(), cmd)
-    return "", 201, {"Location": "/issues/" + str(issue_id)}
+    return "", 201, {"Location": "/issues/" + str(issue_id) }
 
 
 @app.route('/issues/<issue_id>')
 def get_issue(issue_id):
     session = db.start_session()
-    issue_view = views.view_issue(session, uuid.UUID(issue_id))
-    return jsonify(issue_view)
+    view = views.view_issue(session, uuid.UUID(issue_id))
+    return jsonify(view)
 
 
 @app.route('/issues', methods=['GET'])
 def list_issues():
     session = db.start_session()
-    issues_view = views.list_issues(session)
-    return jsonify(issues_view)
+    view = views.list_issues(session)
+    return jsonify(view)
