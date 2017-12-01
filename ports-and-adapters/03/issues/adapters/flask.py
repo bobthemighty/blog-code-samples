@@ -24,13 +24,13 @@ def report_issue():
 
 @app.route('/issues/<issue_id>')
 def get_issue(issue_id):
-    session = db.get_session()
+    session = db.start_session()
     issue_view = views.view_issue(session, uuid.UUID(issue_id))
     return jsonify(issue_view)
 
 
 @app.route('/issues', methods=['GET'])
 def list_issues():
-    session = db.get_session()
+    session = db.start_session()
     issues_view = views.list_issues(session)
     return jsonify(issues_view)

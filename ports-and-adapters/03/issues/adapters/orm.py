@@ -32,11 +32,11 @@ class IssueRepository:
 
 class SqlAlchemyUnitOfWork(UnitOfWork):
 
-    def __init__(self, session_maker):
-        self.session_maker = session_maker
+    def __init__(self, start_session):
+        self.start_session = start_session
 
     def __enter__(self):
-        self.session = self.session_maker()
+        self.session = self.start_session()
         return self
 
     def __exit__(self, type, value, traceback):
@@ -57,12 +57,9 @@ class SqlAlchemy:
 
     def __init__(self, uri):
         self.engine = create_engine(uri)
-        self._session_maker = scoped_session(
-            sessionmaker(self.engine),
-        )
 
     def get_unit_of_work(self):
-        return SqlAlchemyUnitOfWork(self._session_maker)
+        return SqlAlchemyUnitOfWork(self.start_session)
 
     def recreate_schema(self):
         drop_database(self.engine.url)
@@ -72,8 +69,8 @@ class SqlAlchemy:
         create_database(self.engine.url)
         self.metadata.create_all()
 
-    def get_session(self):
-        return self._session_maker()
+    def start_session(self):
+        return scoped_session(sessionmaker(self.engine))
 
     def configure_mappings(self):
         self.metadata = MetaData(self.engine)
@@ -100,19 +97,4 @@ class SqlAlchemy:
                     issues.c.reporter_email)
             },
         )
-
-
-class SqlAlchemySessionContext:
-
-    def __init__(self, session_maker):
-        self._session_maker = session_maker
-
-    def __enter__(self):
-        self._session = self._session_maker()
-
-    def __exit__(self, type, value, traceback):
-        self._session_maker.remove()
-
-
-
 

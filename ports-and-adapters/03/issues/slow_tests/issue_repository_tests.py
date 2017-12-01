@@ -26,7 +26,7 @@ class When_we_load_a_persisted_issue:
         handle_report_issue(self.db.get_unit_of_work(), cmd)
 
     def because_we_load_the_issues(self):
-        self.issue = view_issue(self.db.get_session(), self.issue_id)
+        self.issue = view_issue(self.db.start_session(), self.issue_id)
 
     def it_should_have_the_correct_id(self):
         # expect(self.issue['id']).to(equal(self.issue_id))
