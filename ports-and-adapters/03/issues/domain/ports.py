@@ -32,9 +32,3 @@ class UnitOfWork(abc.ABC):
     def issues(self):
         pass
 
-
-class UnitOfWorkManager(abc.ABC):
-
-    @abc.abstractmethod
-    def start(self) -> UnitOfWork:
-        pass
