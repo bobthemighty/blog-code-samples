@@ -26,7 +26,6 @@ class PunqMessageRegistry(ports.HandlerRegistry):
         except:
             pass
 
-
     def register_all(self, module):
         for _, type in inspect.getmembers(module, predicate=inspect.isclass):
             self.register(type)
@@ -49,7 +48,8 @@ db.register_in(container)
 
 container.register(ports.IssueViewBuilder, views.IssueViewBuilder)
 container.register(ports.IssueListViewBuilder, views.IssueListBuilder)
-container.register(domain.emails.EmailSender, adapters.emails.LoggingEmailSender)
+container.register(domain.emails.EmailSender,
+                   adapters.emails.LoggingEmailSender)
 messages = PunqMessageRegistry(container)
 container.register(ports.HandlerRegistry, messages)
 container.register(ports.MessageBus)

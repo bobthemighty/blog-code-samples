@@ -6,12 +6,13 @@ EmailAddress = NewType('email', str)
 default_from_addr = EmailAddress('issues@example.org')
 TemplateData = Dict[str, Any]
 
-class MailTemplate (NamedTuple):
+
+class MailTemplate(NamedTuple):
     subject: Template
     body: Template
 
 
-class MailRequest (NamedTuple):
+class MailRequest(NamedTuple):
     template: MailTemplate
     from_addr: EmailAddress
     to_addr: EmailAddress
@@ -27,9 +28,7 @@ class EmailSender:
     def __init__(self, send):
         self._send = send
 
-    def send(self, request:MailRequest, data: TemplateData):
-        self._send(
-                request.to_addr,
-                request.from_addr,
-                request.template.subject.render(data),
-                request.template.body.render(data))
+    def send(self, request: MailRequest, data: TemplateData):
+        self._send(request.to_addr, request.from_addr,
+                   request.template.subject.render(data),
+                   request.template.body.render(data))

@@ -6,7 +6,6 @@ from issues.domain.commands import ReportIssueCommand
 
 from expects import expect, have_len, equal, be_true
 
-
 email = "bob@example.org"
 name = "bob"
 desc = "My mouse won't move"

@@ -4,7 +4,8 @@ from uuid import UUID
 from .model import Issue
 
 
-class IssueNotFoundException (Exception): pass
+class IssueNotFoundException(Exception):
+    pass
 
 
 class IssueLog(abc.ABC):
@@ -54,9 +55,9 @@ class UnitOfWorkManager(abc.ABC):
     def start(self) -> UnitOfWork:
         pass
 
-class CommandAlreadySubscribedException (Exception):
-    pass
 
+class CommandAlreadySubscribedException(Exception):
+    pass
 
 
 class HandlerRegistry:
@@ -81,6 +82,7 @@ class IssueViewBuilder:
     @abc.abstractmethod
     def fetch(self, id):
         pass
+
 
 class IssueListViewBuilder:
 

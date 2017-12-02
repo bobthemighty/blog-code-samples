@@ -5,6 +5,7 @@ from issues.adapters.orm import SqlAlchemy
 
 from expects import expect, equal, have_len
 
+
 class When_we_load_a_persisted_issue:
 
     def given_a_database_containing_an_issue(self):
@@ -13,10 +14,8 @@ class When_we_load_a_persisted_issue:
         self.db.configure_mappings()
         self.db.recreate_schema()
 
-        cmd = ReportIssueCommand(
-               'fred',
-               'fred@example.org',
-               'forgot my password again')
+        cmd = ReportIssueCommand('fred', 'fred@example.org',
+                                 'forgot my password again')
         handler = ReportIssueHandler(self.db.unit_of_work_manager)
         handler.handle(cmd)
 

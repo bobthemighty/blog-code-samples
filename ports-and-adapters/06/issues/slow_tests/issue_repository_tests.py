@@ -10,17 +10,15 @@ import uuid
 
 from expects import expect, equal, have_len
 
+
 class When_we_load_a_persisted_issue:
 
     issue_id = uuid.uuid4()
 
     def given_a_database_containing_an_issue(self):
 
-        cmd = ReportIssue(
-                self.issue_id,
-               'fred',
-               'fred@example.org',
-               'forgot my password again')
+        cmd = ReportIssue(self.issue_id, 'fred', 'fred@example.org',
+                          'forgot my password again')
         bus = config.bus
         bus.handle(cmd)
 

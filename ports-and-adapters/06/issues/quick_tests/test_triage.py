@@ -8,7 +8,8 @@ from issues.domain.model import Issue
 
 from expects import expect, have_len, equal, be_true
 
-class When_triaging_an_issue (With_a_new_issue):
+
+class When_triaging_an_issue(With_a_new_issue):
 
     issue_id = uuid.uuid4()
     category = 'training'
@@ -30,5 +31,3 @@ class When_triaging_an_issue (With_a_new_issue):
 
     def it_should_have_committed_the_unit_of_work(self):
         expect(self.uow.was_committed).to(be_true)
-
-

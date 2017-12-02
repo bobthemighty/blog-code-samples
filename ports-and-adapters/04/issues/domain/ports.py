@@ -4,7 +4,8 @@ from uuid import UUID
 from .model import Issue
 
 
-class IssueNotFoundException (Exception): pass
+class IssueNotFoundException(Exception):
+    pass
 
 
 class IssueLog(abc.ABC):
@@ -54,7 +55,8 @@ class UnitOfWorkManager(abc.ABC):
     def start(self) -> UnitOfWork:
         pass
 
-class CommandAlreadySubscribedException (Exception):
+
+class CommandAlreadySubscribedException(Exception):
     pass
 
 
@@ -70,12 +72,11 @@ class MessageBus:
 
     def subscribe_to(self, msg, handler):
         subscribers = self.subscribers[msg.__name__]
-        # We shouldn't be able to subscribe more 
+        # We shouldn't be able to subscribe more
         # than one handler for a command
         if msg.is_cmd and len(subscribers) > 0:
-           raise CommandAlreadySubscribedException(msg.__name__)
+            raise CommandAlreadySubscribedException(msg.__name__)
         subscribers.append(handler)
-
 
 
 class IssueViewBuilder:

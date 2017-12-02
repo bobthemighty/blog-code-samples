@@ -1,15 +1,12 @@
 import abc
 from uuid import UUID
-from .messages import (
-        IssueState,
-        IssuePriority,
-        IssueReassigned,
-        IssueAssignedToEngineer
-    )
+from .messages import (IssueState, IssuePriority, IssueReassigned,
+                       IssueAssignedToEngineer)
+
 
 class IssueReporter:
 
-    def __init__(self, name:str, email:str) -> None:
+    def __init__(self, name: str, email: str) -> None:
         self.name = name
         self.email = email
 
@@ -28,10 +25,10 @@ class Assignment:
         return True
 
 
-
 class Issue:
 
-    def __init__(self, issue_id:UUID, reporter: IssueReporter, description: str) -> None:
+    def __init__(self, issue_id: UUID, reporter: IssueReporter,
+                 description: str) -> None:
         self.id = issue_id
         self.description = description
         self.reporter = reporter
@@ -59,11 +56,9 @@ class Issue:
         self.state = IssueState.ReadyForWork
 
         if self.assignment.is_reassignment_from(previous_assignment):
-            self.events.append(IssueReassigned(self.id, previous_assignment.assigned_to))
+            self.events.append(
+                IssueReassigned(self.id, previous_assignment.assigned_to))
 
         if assigned_to != assigned_by:
-            self.events.append(IssueAssignedToEngineer(
-                self.id,
-                assigned_to,
-                assigned_by
-            ))
+            self.events.append(
+                IssueAssignedToEngineer(self.id, assigned_to, assigned_by))

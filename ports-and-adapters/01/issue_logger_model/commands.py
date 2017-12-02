@@ -1,5 +1,6 @@
 from typing import NamedTuple
 
+
 class ReportIssueCommand(NamedTuple):
 
     reporter_name: str

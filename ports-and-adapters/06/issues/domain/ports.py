@@ -5,7 +5,8 @@ from .model import Issue
 from typing import Callable, Generic
 
 
-class IssueNotFoundException (Exception): pass
+class IssueNotFoundException(Exception):
+    pass
 
 
 class IssueLog(abc.ABC):
@@ -55,7 +56,8 @@ class UnitOfWorkManager(abc.ABC):
     def start(self) -> UnitOfWork:
         pass
 
-class CommandAlreadySubscribedException (Exception):
+
+class CommandAlreadySubscribedException(Exception):
     pass
 
 

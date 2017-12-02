@@ -3,12 +3,13 @@ from issues.domain.model import Issue, IssueReporter
 from issues.domain.ports import UnitOfWorkManager, IssueViewBuilder
 from issues.domain import emails
 
+
 class ReportIssueHandler:
 
     def __init__(self, uowm: UnitOfWorkManager):
         self.uowm = uowm
 
-    def handle (self, cmd):
+    def handle(self, cmd):
         reporter = IssueReporter(cmd.reporter_name, cmd.reporter_email)
         issue = Issue(cmd.issue_id, reporter, cmd.problem_description)
 
@@ -22,7 +23,7 @@ class TriageIssueHandler:
     def __init__(self, uowm: UnitOfWorkManager):
         self.uowm = uowm
 
-    def handle (self, cmd):
+    def handle(self, cmd):
         with self.uowm.start() as tx:
             issue = tx.issues.get(cmd.issue_id)
             issue.triage(cmd.priority, cmd.category)
@@ -34,7 +35,7 @@ class PickIssueHandler:
     def __init__(self, uowm: UnitOfWorkManager):
         self.uowm = uowm
 
-    def handle (self, cmd):
+    def handle(self, cmd):
         with self.uowm.start() as tx:
             issue = tx.issues.get(cmd.issue_id)
             issue.assign(cmd.picked_by)
@@ -46,7 +47,7 @@ class AssignIssueHandler:
     def __init__(self, uowm: UnitOfWorkManager):
         self.uowm = uowm
 
-    def handle (self, cmd):
+    def handle(self, cmd):
         with self.uowm.start() as tx:
             issue = tx.issues.get(cmd.issue_id)
             issue.assign(cmd.assigned_to, cmd.assigned_by)
@@ -55,7 +56,8 @@ class AssignIssueHandler:
 
 class IssueAssignedHandler:
 
-    def __init__(self, view_builder: IssueViewBuilder, sender: emails.EmailSender):
+    def __init__(self, view_builder: IssueViewBuilder,
+                 sender: emails.EmailSender):
         self.sender = sender
         self.view_builder = view_builder
 
@@ -66,8 +68,6 @@ class IssueAssignedHandler:
             emails.IssueAssignedToMe,
             emails.default_from_addr,
             emails.EmailAddress(evt.assigned_to),
-            )
+        )
 
         self.sender.send(request, data)
-
-

@@ -13,7 +13,6 @@ db.configure_mappings()
 db.create_schema()
 
 
-
 @app.route('/issues', methods=['POST'])
 def report_issue():
     issue_id = uuid.uuid4()
@@ -22,7 +21,8 @@ def report_issue():
     handler = ReportIssueHandler(db.unit_of_work_manager)
     handler.handle(cmd)
 
-    return "", 201, {"Location": "/issues/" + str(issue_id) }
+    return "", 201, {"Location": "/issues/" + str(issue_id)}
+
 
 @app.route('/issues/<issue_id>')
 def get_issue(issue_id):
@@ -30,6 +30,7 @@ def get_issue(issue_id):
     view_builder = IssueViewBuilder(session)
     view = view_builder.fetch(uuid.UUID(issue_id))
     return jsonify(view)
+
 
 @app.route('/issues', methods=['GET'])
 def list_issues():

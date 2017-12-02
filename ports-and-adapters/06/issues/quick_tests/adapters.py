@@ -52,9 +52,14 @@ class FakeUnitOfWork(UnitOfWork, UnitOfWorkManager):
     def issues(self):
         return self._issues
 
-sent_mail = namedtuple('fakes_sent_mail', ['recipient', 'sender', 'subject', 'body'])
+
+sent_mail = namedtuple('fakes_sent_mail',
+                       ['recipient', 'sender', 'subject', 'body'])
+
 
 def fake_sender(sent):
+
     def send(recipient, sender, subject, body):
         sent.append(sent_mail(recipient, sent_mail, subject, body))
+
     return send

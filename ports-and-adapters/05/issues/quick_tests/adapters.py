@@ -55,13 +55,14 @@ class FakeUnitOfWork(UnitOfWork, UnitOfWorkManager):
 
 class FakeEmailSender(EmailSender):
 
-    sent_mail = namedtuple('fakes_sent_mail', ['recipient', 'sender', 'subject', 'body'])
+    sent_mail = namedtuple('fakes_sent_mail',
+                           ['recipient', 'sender', 'subject', 'body'])
 
     def __init__(self):
         self.sent = []
 
     def _do_send(self, recipient, sender, subject, body):
-       self.sent.append(self.sent_mail(recipient, sender, subject, body))
+        self.sent.append(self.sent_mail(recipient, sender, subject, body))
 
 
 class FakeViewBuilder:

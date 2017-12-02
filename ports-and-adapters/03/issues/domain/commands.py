@@ -1,6 +1,7 @@
 from uuid import UUID
 from typing import NamedTuple
 
+
 class ReportIssueCommand(NamedTuple):
     issue_id: UUID
     reporter_name: str

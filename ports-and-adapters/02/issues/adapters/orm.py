@@ -1,9 +1,8 @@
 import logging
 
 import sqlalchemy
-from sqlalchemy import (
-        Table, Column, MetaData, String, Integer, Text,
-        create_engine)
+from sqlalchemy import (Table, Column, MetaData, String, Integer, Text,
+                        create_engine)
 from sqlalchemy.orm import mapper, scoped_session, sessionmaker, composite
 import sqlalchemy.exc
 import sqlalchemy.orm.exc
@@ -62,9 +61,7 @@ class SqlAlchemy:
 
     def __init__(self, uri):
         self.engine = create_engine(uri)
-        self._session_maker = scoped_session(
-            sessionmaker(self.engine),
-        )
+        self._session_maker = scoped_session(sessionmaker(self.engine),)
 
     @property
     def unit_of_work_manager(self):
@@ -82,23 +79,22 @@ class SqlAlchemy:
         self.metadata = MetaData(self.engine)
 
         IssueReporter.__composite_values__ = lambda i: (i.name, i.email)
-        issues = Table(
-            'issues',
-            self.metadata,
-            Column('id', Integer, primary_key=True),
-            Column('reporter_name', String(50)),
-            Column('reporter_email', String(50)),
-            Column('description', Text)
-        )
+        issues = Table('issues', self.metadata,
+                       Column('id', Integer, primary_key=True),
+                       Column('reporter_name', String(50)),
+                       Column('reporter_email', String(50)),
+                       Column('description', Text))
         mapper(
             Issue,
             issues,
             properties={
-                'id': issues.c.id,
-                'description': issues.c.description,
-                'reporter': composite(IssueReporter,
-                    issues.c.reporter_name,
-                    issues.c.reporter_email)
+                'id':
+                issues.c.id,
+                'description':
+                issues.c.description,
+                'reporter':
+                composite(IssueReporter, issues.c.reporter_name,
+                          issues.c.reporter_email)
             },
         )
 
@@ -117,21 +113,14 @@ class SqlAlchemySessionContext:
 
 class IssueViewBuilder:
 
-    issue_view_model = namedtuple('issue_view', [
-        'id',
-        'description',
-        'reporter_email',
-        'reporter_name'
-        ])
+    issue_view_model = namedtuple(
+        'issue_view', ['id', 'description', 'reporter_email', 'reporter_name'])
 
     def __init__(self, session):
         self.session = session
 
     def fetch(self, id):
-        session.execute('SELECT id, description, reporter_email, reporter_name '
-                    +   ' FROM issues '
-                    +   ' WHERE issue_id = :id',
-
-                          id=id)
-
-
+        session.execute(
+            'SELECT id, description, reporter_email, reporter_name ' +
+            ' FROM issues ' + ' WHERE issue_id = :id',
+            id=id)

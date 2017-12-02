@@ -4,9 +4,8 @@ import typing
 import uuid
 
 import sqlalchemy
-from sqlalchemy import (
-        Table, Column, MetaData, String, Integer, Text, ForeignKey,
-        create_engine, event)
+from sqlalchemy import (Table, Column, MetaData, String, Integer, Text,
+                        ForeignKey, create_engine, event)
 from sqlalchemy.orm import mapper, scoped_session, sessionmaker, composite, relationship
 import sqlalchemy.exc
 import sqlalchemy.orm.exc
@@ -15,13 +14,8 @@ from sqlalchemy_utils.functions import create_database, drop_database
 from sqlalchemy_utils.types.uuid import UUIDType
 
 from issues.domain.model import Issue, IssueReporter, Assignment
-from issues.domain.ports import (
-    IssueLog,
-    UnitOfWork,
-    UnitOfWorkManager,
-    MessageBus
-)
-
+from issues.domain.ports import (IssueLog, UnitOfWork, UnitOfWorkManager,
+                                 MessageBus)
 
 SessionFactory = typing.Callable[[], sqlalchemy.orm.Session]
 
@@ -42,11 +36,12 @@ class IssueRepository(IssueLog):
 
 class SqlAlchemyUnitOfWork(UnitOfWork):
 
-    def __init__(self, sessionfactory: SessionFactory, bus:MessageBus) -> None:
+    def __init__(self, sessionfactory: SessionFactory, bus: MessageBus) -> None:
         self.sessionfactory = sessionfactory
         self.bus = bus
         event.listen(self.sessionfactory, "after_flush", self.gather_events)
-        event.listen(self.sessionfactory, "loaded_as_persistent", self.setup_events)
+        event.listen(self.sessionfactory, "loaded_as_persistent",
+                     self.setup_events)
 
     def __enter__(self):
         self.session = self.sessionfactory()
@@ -89,9 +84,7 @@ class SqlAlchemy:
     def __init__(self, uri, bus):
         self.engine = create_engine(uri)
         self.bus = bus
-        self._session_maker = scoped_session(
-            sessionmaker(self.engine),
-        )
+        self._session_maker = scoped_session(sessionmaker(self.engine),)
 
     def recreate_schema(self):
         self.configure_mappings()
@@ -102,10 +95,7 @@ class SqlAlchemy:
         return self._session_maker()
 
     def start_unit_of_work(self):
-        return SqlAlchemyUnitOfWork(
-            self._session_maker,
-            self.bus
-        )
+        return SqlAlchemyUnitOfWork(self._session_maker, self.bus)
 
     def create_schema(self):
         create_database(self.engine.url)
@@ -115,15 +105,12 @@ class SqlAlchemy:
         self.metadata = MetaData(self.engine)
 
         IssueReporter.__composite_values__ = lambda i: (i.name, i.email)
-        issues = Table(
-            'issues',
-            self.metadata,
-            Column('pk', Integer, primary_key=True),
-            Column('issue_id', UUIDType),
-            Column('reporter_name', String(50)),
-            Column('reporter_email', String(50)),
-            Column('description', Text)
-        )
+        issues = Table('issues', self.metadata,
+                       Column('pk', Integer, primary_key=True),
+                       Column('issue_id', UUIDType),
+                       Column('reporter_name', String(50)),
+                       Column('reporter_email', String(50)),
+                       Column('description', Text))
 
         assignments = Table(
             'assignments',
@@ -139,20 +126,24 @@ class SqlAlchemy:
             Issue,
             issues,
             properties={
-                '__pk': issues.c.pk,
-                'id': issues.c.issue_id,
-                'description': issues.c.description,
-                'reporter': composite(IssueReporter,
-                    issues.c.reporter_name,
-                    issues.c.reporter_email),
-                '_assignments': relationship(Assignment, backref='issue')
+                '__pk':
+                issues.c.pk,
+                'id':
+                issues.c.issue_id,
+                'description':
+                issues.c.description,
+                'reporter':
+                composite(IssueReporter, issues.c.reporter_name,
+                          issues.c.reporter_email),
+                '_assignments':
+                relationship(Assignment, backref='issue')
             },
         ),
 
         mapper(
             Assignment,
             assignments,
-            properties = {
+            properties={
                 '__pk': assignments.c.pk,
                 'id': assignments.c.id,
                 'assigned_to': assignments.c.assigned_to,

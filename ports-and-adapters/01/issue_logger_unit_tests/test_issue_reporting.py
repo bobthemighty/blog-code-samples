@@ -4,7 +4,6 @@ from issue_logger_model.commands import ReportIssueCommand
 
 from expects import expect, have_len, equal
 
-
 email = "bob@example.org"
 name = "bob"
 desc = "My mouse won't move"

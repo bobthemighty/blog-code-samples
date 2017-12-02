@@ -10,17 +10,15 @@ import uuid
 
 from expects import expect, equal, have_len
 
+
 class When_we_load_a_persisted_issue:
 
     issue_id = uuid.uuid4()
 
     def given_a_database_containing_an_issue(self):
 
-        cmd = ReportIssueCommand(
-                self.issue_id,
-               'fred',
-               'fred@example.org',
-               'forgot my password again')
+        cmd = ReportIssueCommand(self.issue_id, 'fred', 'fred@example.org',
+                                 'forgot my password again')
         handler = ReportIssueHandler(config.db.unit_of_work_manager)
         handler.handle(cmd)
 

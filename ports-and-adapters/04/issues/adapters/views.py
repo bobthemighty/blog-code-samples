@@ -2,9 +2,10 @@ import collections
 import uuid
 
 # This little helper function converts the binary data
-# We store in Sqlite back to a uuid. 
+# We store in Sqlite back to a uuid.
 # Ordinarily I use postgres, which has a native UniqueID
 # type, so this manual unmarshalling isn't necessary
+
 
 def read_uuid(record, column):
     record = dict(record)
@@ -31,6 +32,7 @@ class IssueViewBuilder:
         record = result.fetchone()
         return dict(record)
 
+
 class IssueListBuilder:
 
     _q = """SELECT issue_id,
@@ -45,8 +47,8 @@ class IssueListBuilder:
     def fetch(self):
         session = self.db.get_session()
         query = session.execute(
-                    'SELECT issue_id, description, reporter_email, reporter_name '
-                    +   ' FROM issues')
+            'SELECT issue_id, description, reporter_email, reporter_name ' +
+            ' FROM issues')
 
         result = []
         for r in query.fetchall():
@@ -54,6 +56,3 @@ class IssueListBuilder:
             result.append(r)
 
         return result
-
-
-

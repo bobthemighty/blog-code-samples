@@ -3,9 +3,8 @@ import logging
 import uuid
 
 import sqlalchemy
-from sqlalchemy import (
-        Table, Column, MetaData, String, Integer, Text,
-        create_engine)
+from sqlalchemy import (Table, Column, MetaData, String, Integer, Text,
+                        create_engine)
 from sqlalchemy.orm import mapper, scoped_session, sessionmaker, composite
 import sqlalchemy.exc
 import sqlalchemy.orm.exc
@@ -65,9 +64,7 @@ class SqlAlchemy:
 
     def __init__(self, uri):
         self.engine = create_engine(uri)
-        self._session_maker = scoped_session(
-            sessionmaker(self.engine),
-        )
+        self._session_maker = scoped_session(sessionmaker(self.engine),)
 
     @property
     def unit_of_work_manager(self):
@@ -88,25 +85,25 @@ class SqlAlchemy:
         self.metadata = MetaData(self.engine)
 
         IssueReporter.__composite_values__ = lambda i: (i.name, i.email)
-        issues = Table(
-            'issues',
-            self.metadata,
-            Column('pk', Integer, primary_key=True),
-            Column('issue_id', UUIDType),
-            Column('reporter_name', String(50)),
-            Column('reporter_email', String(50)),
-            Column('description', Text)
-        )
+        issues = Table('issues', self.metadata,
+                       Column('pk', Integer, primary_key=True),
+                       Column('issue_id', UUIDType),
+                       Column('reporter_name', String(50)),
+                       Column('reporter_email', String(50)),
+                       Column('description', Text))
         mapper(
             Issue,
             issues,
             properties={
-                '__pk': issues.c.pk,
-                'id': issues.c.issue_id,
-                'description': issues.c.description,
-                'reporter': composite(IssueReporter,
-                    issues.c.reporter_name,
-                    issues.c.reporter_email)
+                '__pk':
+                issues.c.pk,
+                'id':
+                issues.c.issue_id,
+                'description':
+                issues.c.description,
+                'reporter':
+                composite(IssueReporter, issues.c.reporter_name,
+                          issues.c.reporter_email)
             },
         )
 
@@ -121,7 +118,3 @@ class SqlAlchemySessionContext:
 
     def __exit__(self, type, value, traceback):
         self._session_maker.remove()
-
-
-
-

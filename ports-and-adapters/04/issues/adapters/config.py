@@ -28,5 +28,3 @@ bus.subscribe_to(msg.ReportIssueCommand, report_issue)
 bus.subscribe_to(msg.TriageIssueCommand, triage_issue)
 bus.subscribe_to(msg.IssueAssignedToEngineer, issue_assigned)
 bus.subscribe_to(msg.AssignIssueCommand, assign_issue)
-
-

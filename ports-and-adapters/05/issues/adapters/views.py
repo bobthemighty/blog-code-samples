@@ -4,9 +4,10 @@ from .orm import SessionFactory
 from issues.domain import ports
 
 # This little helper function converts the binary data
-# We store in Sqlite back to a uuid. 
+# We store in Sqlite back to a uuid.
 # Ordinarily I use postgres, which has a native UniqueID
 # type, so this manual unmarshalling isn't necessary
+
 
 def read_uuid(record, column):
     record = dict(record)
@@ -16,7 +17,7 @@ def read_uuid(record, column):
     return record
 
 
-class IssueViewBuilder (ports.IssueViewBuilder):
+class IssueViewBuilder(ports.IssueViewBuilder):
 
     _q = """SELECT description,
                  reporter_email,
@@ -33,6 +34,7 @@ class IssueViewBuilder (ports.IssueViewBuilder):
         record = result.fetchone()
         return dict(record)
 
+
 class IssueListBuilder:
 
     _q = """SELECT issue_id,
@@ -47,8 +49,8 @@ class IssueListBuilder:
     def fetch(self):
         session = self.session_factory()
         query = session.execute(
-                    'SELECT issue_id, description, reporter_email, reporter_name '
-                    +   ' FROM issues')
+            'SELECT issue_id, description, reporter_email, reporter_name ' +
+            ' FROM issues')
 
         result = []
         for r in query.fetchall():
