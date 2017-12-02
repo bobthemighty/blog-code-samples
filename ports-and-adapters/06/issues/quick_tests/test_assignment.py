@@ -6,7 +6,7 @@ from .matchers import have_raised
 
 from issues.services import (
         assign_issue,
-        on_issue_assigned_to_me,
+        on_issue_assigned_to_engineer,
         pick_issue
     )
 from issues.domain.messages import (
@@ -129,7 +129,7 @@ class When_an_issue_is_assigned:
                 self.assigned_to,
                 self.assigned_by)
 
-        on_issue_assigned_to_me(lambda x: self.view_model, self.emailer, evt)
+        on_issue_assigned_to_engineer(lambda x: self.view_model, self.emailer, evt)
 
     def it_should_send_an_email(self):
         expect(self.sent).to(have_len(1))
