@@ -172,7 +172,8 @@ import punq
 # client code
 
 class IssueAssignedHandler:
-    # We use type hints to declare what dependencies we need
+    # Instead of a decorator and arbitrary string names, We use
+    # type hints of actual classes to declare what dependencies we need
     def __init__(self, sender: EmailSender, view: IssueViewBuilder):
         self.sender = sender
         self.view = view
@@ -181,20 +182,18 @@ class IssueAssignedHandler:
         pass
 
 
-# configuration
+# configuration:
 
 container = punq.container()
 
-# We can register a singleton instance of a dependency
-container.register(EmailSender, SmtpEmailSender(host=..., port=..))
-
-# Or a class that implements a particular service
-container.register(UnitOfWorkManager, SqlAlchemyUnitOfWorkManager)
-
-# Or register the service itself
+# We can register a service class
 container.register(IssueViewBuilder)
 
+# Or a subclass that implements a service in a particular way
+container.register(UnitOfWorkManager, SqlAlchemyUnitOfWorkManager)
 
+# Or a singleton instance of a dependency
+container.register(EmailSender, SmtpEmailSender(host=..., port=..))
 
 handler = container.resolve(IssueAssignedHandler)
 ```
