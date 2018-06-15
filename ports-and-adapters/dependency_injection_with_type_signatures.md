@@ -280,9 +280,10 @@ def get_handler_for(event_type):
     container.resolve(Handles[event_type])
 ```
 
+
+# Nested services
+
 Punq has one more useful trick up its sleeve: nested registrations. These are useful when you need to build some kind of chain of responsibility - a pattern where objects try to handle a request, then pass it along the chain to the next in line.
-
-
 
 ```python
 
@@ -298,38 +299,18 @@ class LoggingHandler:
     def handle(self, msg):
         logging.info("Handling message %s", msg)
         try:
-            next.handle(msg)
+            self.next.handle(msg)
             logging.info("Handled message %s", msg)
         except Exception as e:
             logging.exception("Failed to handle message %s", msg)
             raise
-
-
-class DefaultHandler:
-
-    def __init__(self, next: MessageHandler, container:punq.Container):
-        self.next = next
-        self.container = container
-
-    def handle(self, msg):
-        handler = container.resolve(Handles[type(msg)])
-        handler.handle(msg)
-
-container.register(MessageHandler, DefaultHandler)
-container.register(MessageHandler, LoggingHandler)
-
-container.register(Handles[IssueAssigned], IssueAssignedHandler)
-
-bus = container.resolve(MessageBus)
-
-# calls logging handler, and then DefaultHandler
-bus.handle(msg)
 ```
 
-Because each MessageHandler depends on another MessageHandler, punq treats them as a chain, and injects them into each other like a stack of Russian dolls. In the following code we add two new message handlers, a metrics handler that records the runtime of our handler pipeline so we can monitor our application, and a de-duplicating handler that prevents us from handling the same message twice. Both of these require complex dependencies of their own, so we can delegate their creation to the container.
+If punq has multiple services registered for a particular class it will pop one off its stack each time it's asked for one. Because each MessageHandler depends on another MessageHandler, punq treats them as a chain, and injects them into each other like a stack of Russian dolls.
+
+In the following code we add two new message handlers, a metrics handler that records the runtime of our handler pipeline so we can monitor our application, and a de-duplicating handler that prevents us from handling the same message twice. Both of these require complex dependencies of their own, and we can delegate their creation to the container.
 
 ```python
-
 class MetricsGatheringHandler(MessageHandler):
 
     def __init__(self, metrics: MetricsCollector, next: MessageHandler):
@@ -341,7 +322,7 @@ class MetricsGatheringHandler(MessageHandler):
             self.next.handle(msg)
 
 
-class DedeuplicatingHandler(MessageHandler):
+class DeduplicatingHandler(MessageHandler):
 
     def __init__(self, store:MessageStore, next:MessageHandler):
         self.next = next
@@ -358,13 +339,44 @@ class DedeuplicatingHandler(MessageHandler):
             self.store.add(msg)
 
 
+container.register(MessageHandler)
+container.register(MessageHandler, LoggingHandler)
+container.register(MessageHandler, MetricsGatheringHandler)
+container.register(MessageHandler, DeduplicatingHandler)
 container.register(MetricsCollector, StatsdMetricsCollector)
 container.register(MessageFilter, InMemoryMessageFilter)
-container.register(MessageHandler, MetricsGatheringHandler)
-container.register(MessageHandler, DedeuplicatingHandler)
 
-# Deduplicates, records metrics, writes a log file, and invokes our Command Handler
+# Deduplicates, records metrics and writes a log file:
 container.resolve(MessageHandler).handle(msg)
 ```
 
-This is what I meant in the last part when I said that a message bus is a great place to put cross-cutting concerns. Validation, exception handling, db session management, and basic logging are all great candidates for decorators on our message bus, and DI makes it easy for us to write and test those components separately. Now that I've spent 5 parts building classes, I want to start throwing them all away again and in parts 6 and 7 we'll look at alternative ways of expressing the same architectural patterns.
+This is what I meant in the last part when I said that a message bus is a great place to put cross-cutting concerns. By using this pattern of composing generic `MessageHandler` services, we can implement things like validation, logging, exception handling, event database session management.  DI makes it easy for us to write and test those components separately.
+
+# For bonus points: a generic handler can become a message bus implementation
+
+One of the fun side-effects of having a DI container that supports nesting is that we could implement a top-level "God" handler for the generic case whose job is to resolve down to the specific message type, and that effectively becomes the implementation of our message bus:
+
+```python
+class DefaultHandler:
+
+    def __init__(self, container:punq.Container):
+        self.container = container
+
+    def handle(self, msg):
+        handler = container.resolve(Handles[type(msg)])
+        handler.handle(msg)
+
+container.register(MessageHandler, DefaultHandler)
+container.register(MessageHandler, LoggingHandler)
+...
+container.register(Handles[IssueAssigned], IssueAssignedHandler)
+
+# Deduplicates, records metrics, etc, 
+# and then the DefaultHandler finds and runs the specific handler for this particular msg type,
+# egif msg is IssueAssigned, will run IssueAssignedHandler
+container.resolve(MessageHandler).handle(msg)
+```
+
+
+Now that I've spent 5 parts building classes, I want to start throwing them all away again and in parts 6 and 7 we'll look at alternative ways of expressing the same architectural patterns.
+
