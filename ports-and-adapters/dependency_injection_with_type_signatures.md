@@ -198,7 +198,13 @@ container.register(EmailSender, SmtpEmailSender(host=..., port=..))
 handler = container.resolve(IssueAssignedHandler)
 ```
 
+(A ["container"](https://www.martinfowler.com/articles/injection.html) is the established name for a dependency injection framework's registry of services.)
+
+
 So far, so underwhelming. Simple registrations don't really save us anything over the bootstrap script from earlier. Using a container for this kind of work really only cuts down on duplication - when I've registered UnitOfWorkManager once, I never have to refer to it again, whereas in the bootstrap I had to explicitly pass it to every handler. It's nice not having to decorate my class with dependency injection specific noise though, instead I can just declare what my dependencies are. As an added bonus, I can run `mypy` over my code and it will tell me if I've made any stupid type errors.
+
+
+# Using DI to compose chains of services
 
 There are more useful things we can do with a dependency injection container, though. For example, maybe we're writing a program that needs to run a bunch of processing rules over some text. We decide to treat each processing rule as a function and use our container to fetch them all at runtime.
 
@@ -230,20 +236,22 @@ container = punq.container()
 container.register(string_processing_rule, upper_case)
 container.register(string_processing_rule, reverse)
 
+# `container.resolve` recognises that `StringProcessor` depends on a list of `string_processing_rule` implementations,
+# so it makes a list of all the ones it knows about and injects them into the new instance it creates.
 processor = container.resolve(StringProcessor)
 
 # prints ("DLORW OLLEH")
 print(processor.process("hello world"))
 ```
 
-One of the advantages of using types over using other keys is that they're composable. I can ask for a List[T] and get all registered instances of some T. This is handy when you're writing code that processes the same message with a bunch on different steps, including rules engines and message buses. Having generics in our type system can make it easier to manage all of our dependencies in other ways, too. For example, I can use generics to automatically wire up all my message handlers.
+One of the advantages of using types over using other keys is that they're composable. I can ask for a List[T] and get all registered instances of some T. This is handy when you're writing code that processes the same message with a bunch on different steps, including rules engines and message buses (see bonus section). Having generics in our type system can make it easier to manage all of our dependencies in other ways, too. For example, I can use generics to automatically wire up all my message handlers.
 
 ```python
 class IssueAssignedHandler (Handles[IssueAssignedEvent]):
     pass
 ```
 
-Here we're stating that our IssueAssignedHandler is an subtype of the Handles class, and it has a type parameter for the handled event. Given a module full of these, I can enumerate the module's types and perform automatic registration.
+Here we're stating that our `IssueAssignedHandler` is an subtype of the `Handles` class, and it has a type parameter for the handled event. Given a module full of these, I can enumerate the module's types and perform automatic registration.
 
 ```python
 def register_all(module):
@@ -259,18 +267,16 @@ def register(type):
     container.register(handler_service_type, type)
 
 def get_message_type(type):
-    """ If this type subclasses the Handles[TMsg] class, return the parameterised type.
+    """ If this type subclasses the Handles[Msg] class, return the parameterised type.
         eg. for our IssueAssignedHandler, this would return Handles[IssueAssignedEvent]
     """
     try:
-        for base in type.__orig_bases__:
-            if base.__origin__ == services.Handles:
-                return base
-    except:
-        pass
+        return next(b for b in type.__orig_bases__ if b.__origin__ == services.Handles)
+    except (AttributeError, StopIteration):
+        return None
 
 
-def resolve_handler(event_type):
+def get_handler_for(event_type):
     container.resolve(Handles[event_type])
 ```
 
