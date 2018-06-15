@@ -1,6 +1,29 @@
 Dependency injection is not crazy, not un-pythonic, and not enterprisey. Here's Wikipedia:
 
-In other words, Dependency Injection (DI, for all you jargon-fans out there) is when an object is given its dependencies instead of reaching out to get them by itself. For example, in this series we're building a system for managing IT support issues. Last time we had a requirement to send an email when an issue was assigned to an engineer. Our handler is orchestration code, and it plugs together two collaborators: a View Builder that fetches data, and an Email Sender that knows how to send an email to the mail server.
+> In software engineering, dependency injection is a technique whereby one object (or static method) supplies the dependencies of another object. A dependency is an object that can be used (a service). An injection is the passing of a dependency to a dependent object (a client) that would use it. The service is made part of the client's state. Passing the service to the client, rather than allowing a client to build or find the service, is the fundamental requirement of the pattern
+
+In other words, Dependency Injection (DI, for all you jargon-fans out there) is when an object is given its dependencies instead of reaching out to get them by itself. For example, in this series we're building a system for managing IT support issues. Last time we had a requirement to send an email when an issue was assigned to an engineer.
+
+
+## Dependency injection in class constructors
+
+Our handler is orchestration code, and it plugs together two collaborators: a View Builder that fetches data, and an Email Sender that knows how to send an email to the mail server.
+
+We could have our handler import and use its dependencies directly (and implicitly), like this:
+
+```python
+from views import IssueViewBuilder
+from email_sender import EmailSender
+from orm import db
+
+class IssueAssignedHandler:
+
+    def handle(self, cmd):
+        issue_data = IssueViewBuilder(db).fetch(cmd.issue_id)
+        EmailSender().send_email(emails.IssueAssigned, issue_data)
+
+```
+Instead, we make the handler ask for the Email Sender and the View Builder in its constructor:
 
 ```python
 class IssueAssignedHandler:
@@ -9,7 +32,7 @@ class IssueAssignedHandler:
         self.sender = sender
         self.view = view
 
-    def handle(self, msg):
+    def handle(self, cmd):
         data = self.view.fetch(cmd.issue_id)
         sender.send_email(emails.IssueAssigned, data)
 ```
