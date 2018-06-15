@@ -93,14 +93,14 @@ The callables `handler`, `handler_a`, and `handler_b` all take a single argument
 
 ## Dependency Injection enables Clean Architecture
 
-The advantage of building a system this way is that it's very easy to test, configure, and extend the behaviour of our application through composition. Dynamic languages offer many ways to fake the behaviour of a component, but my preference is to write [explicit fakes and stubs](), and to pass them as constructor arguments. This forces me to think about my system in terms of composable parts, and to identify the roles that they play. Instead of directly calling the database from my handler, I'm providing an `IssueViewBuilder`. Instead of writing a load of SMTP code in my handler, I'm providing an instance of `EmailSender`.
+The advantage of building a system this way is that it's very easy to test, configure, and extend the behaviour of our application through composition. Dynamic languages offer many ways to fake the behaviour of a component, but my preference is to write explicit fakes and stubs (not just `unittest.mock.Mock` objects), and pass them as constructor arguments. This forces me to think about my system in terms of composable parts, and to identify the roles that they play. Instead of directly calling the database from my handler, I'm providing an `IssueViewBuilder`. Instead of writing a load of SMTP code in my handler, I'm providing an instance of `EmailSender`.
 
 This, for me at least, is the simplest, most obvious, and least magical way of dealing with dependencies, especially across architectural boundaries. Performing dependency injection - whether by constructor injection or partial application, or some magic property-filling decorator - is mandatory if you want to do ports and adapters. It's the "one weird trick" that allows high-level code (business logic) to remain completely isolated from low level code (database transactions, file operations, email sending etc.)
 
 
 # You don't need to use a framework for DI
 
-Dependency injection gets a bad rap in the Python community for reasons that escape me. I think it's because people assume that you need to use a framework to perform the injection, and they're terrified of ending up in an xml-driven hellscape like Spring. This isn't true, you can still perform dependency injection with no frameworks at all. For example, in the code sample for the previous part in this series, I extracted all my wiring into a single module with boring code that looks like this:
+Dependency injection gets a bad rap in the Python community for reasons that escape me. But I think one of them is that people assume that you need to use a framework to perform the injection, and they're terrified of ending up in an xml-driven hellscape like Spring. This isn't true, you can still perform dependency injection with no frameworks at all. For example, in the code sample for the previous part in this series, I extracted all my wiring into a single module with boring code that looks like this:
 
 ```python
 db = SqlAlchemy('sqlite:///issues.db')
@@ -123,7 +123,7 @@ bus.subscribe_to(msg.IssueAssignedToEngineer, issue_assigned)
 bus.subscribe_to(msg.AssignIssueCommand, assign_issue)
 ```
 
-This code is just a straight-line script that configures the database, creates all of our message handlers, and then registers them with the message bus. This component is what an architect would call a [Composition Root](). On my current teams, we tend to call this a bootstrap script. As systems grow, though, and requirements become more complex, this bootstrapper script can become more repetitive and error-prone. Dependency injection frameworks exist to remove some of the boiler-plate around registering and wiring up dependencies. In recent years the .Net-hipster crowd have started to move away from complex dependency injection containers in favour of simpler composition roots. This is known as poor man's DI, pure DI, or artisanal organic acorn-fed DI.
+This code is just a straight-line script that configures the database, creates all of our message handlers, and then registers them with the message bus. This component is what an architect would call a [Composition Root](https://stackoverflow.com/questions/6277771/what-is-a-composition-root-in-the-context-of-dependency-injection). On my current teams, we tend to call this a bootstrap script. As systems grow, though, and requirements become more complex, this bootstrapper script can become more repetitive and error-prone. Dependency injection frameworks exist to remove some of the boiler-plate around registering and wiring up dependencies. In recent years the .Net-hipster crowd have started to move away from complex dependency injection containers in favour of simpler composition roots. This is known as poor man's DI, pure DI, or artisanal organic acorn-fed DI.
 
 
 # inject
@@ -131,7 +131,7 @@ This code is just a straight-line script that configures the database, creates a
 
 > Dependency injection frameworks exist to remove some of the boiler-plate around registering and wiring up dependencies
 
-Usually, on our Python projects at Made.com, we use the [inject]() library. This is a simple tool that performs the partial application trick I demonstrated above. Inject is my favourite of the Python DI libraries because it's so simple to use, but I have a dislike for its use of decorators to declare dependencies.
+Usually, on our Python projects at Made.com, we use the [inject](https://pypi.org/project/Inject/) library. This is a simple tool that performs the partial application trick I demonstrated above. Inject is my favourite of the Python DI libraries because it's so simple to use, but I have a dislike for its use of decorators to declare dependencies.
 
 ```python
 import inject
@@ -163,7 +163,7 @@ The `configure_binder` function takes the place of my bootstrap script in wiring
 
 # Introducing punq, and DI containers
 
-I've been working on a prototype DI framework that avoids this problem by using Python 3.6's [optional type hinting](), and I'd like to show you some use cases.
+I've been working on a prototype DI framework that avoids this problem by using Python 3.6's [optional type hinting](https://www.reddit.com/r/Python/comments/5nb0si/why_optional_type_hinting_in_python_is_not_that/), and I'd like to show you some use cases.
 
 
 ```python
