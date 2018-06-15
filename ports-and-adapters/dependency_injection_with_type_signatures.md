@@ -37,9 +37,16 @@ class IssueAssignedHandler:
         sender.send_email(emails.IssueAssigned, data)
 ```
 
-This is dependency injection. We're injecting the dependencies (the sender and view) by making them parameters of the constructor. That's it. Passing our parameters this way makes them more explicit, and so reduces the overall quantity of Upleasant Surprise hiding in the system. Because I'm providing all my dependencies from outside of my handler, I can change them easily, or provide fakes. This helps to keep the system loosely-coupled and flexible. It also means that I have to think about what the dependencies of my system *ought to be*, and that helps me to define meaningful abstractions.
+This is dependency injection. We're going to be injecting the dependencies (the sender and view) by making them parameters of the constructor. That's it.
 
-Dependency injection is really just a way of performing partial application on a method call. Earlier in this series, I said that I often create handlers by abusing the `__call__` magic method.
+Why bother?  Passing our parameters this way makes them more explicit, and so reduces the overall quantity of Unpleasant Surprise hiding in the system.  It's easy to see what might have side-effects and what doesn't. Because I'm providing all my dependencies from outside of my handler, I can change them easily, or provide fakes for testing. This helps to keep the system loosely-coupled and flexible. It also means that I have to think about what the dependencies of my system *ought to be*, and that helps me to define meaningful abstractions.
+
+
+
+## Dependency injection with partial functions
+
+
+In our implementation, dependency injection is really just a way of performing partial application on a method call. Earlier in this series, I said that I often create handlers by abusing the `__call__` magic method.
 
 ```python
 class IssueAssignedHandler:
@@ -69,8 +76,10 @@ def explicit_closure_handler(self, sender, view):
 handler_a = explicit_closure_handler(sender, view)
 handler_a(cmd)
 
+# or:
 
 from functools import partial
+
 def send_assignment_email(sender, view, cmd):
     data = view.fetch(cmd.issue_id)
     ...
@@ -81,9 +90,13 @@ handler_b(cmd)
 
 The callables `handler`, `handler_a`, and `handler_b` all take a single argument (the command) and run the same code on it, so we can see that they are equivalent. Dependency injection is just a way of parametising the behaviour of our applications by partially applying function arguments.
 
+
+## Dependency Injection enables Clean Architecture
+
 The advantage of building a system this way is that it's very easy to test, configure, and extend the behaviour of our application through composition. Dynamic languages offer many ways to fake the behaviour of a component, but my preference is to write [explicit fakes and stubs](), and to pass them as constructor arguments. This forces me to think about my system in terms of composable parts, and to identify the roles that they play. Instead of directly calling the database from my handler, I'm providing an `IssueViewBuilder`. Instead of writing a load of SMTP code in my handler, I'm providing an instance of `EmailSender`.
 
 This, for me at least, is the simplest, most obvious, and least magical way of dealing with dependencies, especially across architectural boundaries. Performing dependency injection - whether by constructor injection or partial application, or some magic property-filling decorator - is mandatory if you want to do ports and adapters. It's the "one weird trick" that allows high-level code (business logic) to remain completely isolated from low level code (database transactions, file operations, email sending etc.)
+
 
 # You don't need to use a framework for DI
 
@@ -110,7 +123,13 @@ bus.subscribe_to(msg.IssueAssignedToEngineer, issue_assigned)
 bus.subscribe_to(msg.AssignIssueCommand, assign_issue)
 ```
 
-This code is just a straight-line script that configures the database, creates all of our message handlers, and then registers them with the message bus. This component is what an architect would call a [Composition Root](). On my current teams, we tend to call this a bootstrap script. As systems grow, though, and requirements become more complex, this bootstrapper script can become more repetitive and error-prone. Dependency injection frameworks exist to remove some of the boiler-plate around registering and wiring up dependencies. In recent years the .Net-hipster crowd have started to move away from complex dependency injection containers in favour of simpler composition roots. This is known as poor man's DI, pure DI, or artisinal organic acorn-fed DI.
+This code is just a straight-line script that configures the database, creates all of our message handlers, and then registers them with the message bus. This component is what an architect would call a [Composition Root](). On my current teams, we tend to call this a bootstrap script. As systems grow, though, and requirements become more complex, this bootstrapper script can become more repetitive and error-prone. Dependency injection frameworks exist to remove some of the boiler-plate around registering and wiring up dependencies. In recent years the .Net-hipster crowd have started to move away from complex dependency injection containers in favour of simpler composition roots. This is known as poor man's DI, pure DI, or artisanal organic acorn-fed DI.
+
+
+# inject
+
+
+> Dependency injection frameworks exist to remove some of the boiler-plate around registering and wiring up dependencies
 
 Usually, on our Python projects at Made.com, we use the [inject]() library. This is a simple tool that performs the partial application trick I demonstrated above. Inject is my favourite of the Python DI libraries because it's so simple to use, but I have a dislike for its use of decorators to declare dependencies.
 
@@ -140,7 +159,9 @@ inject.configure(configure_binder)
 handler = IssueAssignedHandler()
 ```
 
-The `configure_binder` function takes the place of my bootstrap script in wiring up and configuring my dependencies. When I call `IssueAssignedHandler` the inject library knows that it should replace the `sender` param with the configured SmtpEmailSender, and that it should replace the `view` param with an IssueViewBuilder. The decorator serves to associate the service ("email_sender") with the parameter ("sender"), but it always feels inappropriate to have this kind of declaration outside of my composition root.
+The `configure_binder` function takes the place of my bootstrap script in wiring up and configuring my dependencies. When I call `IssueAssignedHandler` the inject library knows that it should replace the `sender` param with the configured SmtpEmailSender, and that it should replace the `view` param with an IssueViewBuilder. The decorator serves to associate the service ("email_sender") with the parameter ("sender"). It works, but it always felt inappropriate to have this kind of declaration outside of my composition root.
+
+# Introducing punq, and DI containers
 
 I've been working on a prototype DI framework that avoids this problem by using Python 3.6's [optional type hinting](), and I'd like to show you some use cases.
 
