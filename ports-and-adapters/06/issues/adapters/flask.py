@@ -47,3 +47,8 @@ def pick_issue(issue_id):
     cmd = PickIssue(issue_id, request.user)
     bus.handle(cmd)
     return
+
+
+if __name__ == '__main__':
+    app.run(debug=True, use_reloader=False)
+
