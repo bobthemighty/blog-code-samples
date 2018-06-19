@@ -2,7 +2,7 @@ import uuid
 from flask import Flask, request, jsonify
 from . import config
 from issues.domain.messages import ReportIssue, AssignIssue, PickIssue
-from issues.adapters.views import view_issue, list_issues
+from issues.adapters import views
 
 app = Flask('issues')
 bus = config.bus
@@ -24,13 +24,13 @@ def report_issue():
 
 @app.route('/issues/<issue_id>')
 def get_issue(issue_id):
-    view = view_issue(db.get_session, uuid.UUID(issue_id))
+    view = views.view_issue(db.get_session, uuid.UUID(issue_id))
     return jsonify(view)
 
 
 @app.route('/issues', methods=['GET'])
 def list_issues():
-    view = list_issues(db.config.get_session)
+    view = views.list_issues(db.config.get_session)
     return jsonify(view)
 
 

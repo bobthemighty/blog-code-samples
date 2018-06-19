@@ -1,8 +1,8 @@
 import abc
+import functools
 from collections import defaultdict
 from uuid import UUID
 from .model import Issue
-from typing import Callable, Generic
 
 
 class IssueNotFoundException(Exception):
