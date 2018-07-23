@@ -44,9 +44,7 @@ class IssueListBuilder:
         self.session = session
 
     def fetch(self):
-        query = self.session.execute(
-            'SELECT issue_id, description, reporter_email, reporter_name ' +
-            ' FROM issues')
+        query = self.session.execute(self._q)
 
         result = []
         for r in query.fetchall():
