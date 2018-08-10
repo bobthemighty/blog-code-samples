@@ -12,6 +12,7 @@ def report_issue(reporter_name='fred',
     }
 
     resp = requests.post('http://localhost:5000/issues', json=data)
+    assert resp.ok, f'Got code {resp.status_code}, response was {resp.text}'
     return resp.headers['Location']
 
 

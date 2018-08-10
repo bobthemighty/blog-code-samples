@@ -4,6 +4,7 @@ import typing
 import uuid
 
 import sqlalchemy
+from sqlalchemy.pool import StaticPool
 from sqlalchemy import (Table, Column, MetaData, String, Integer, Text,
                         ForeignKey, create_engine, event)
 from sqlalchemy.orm import mapper, scoped_session, sessionmaker, composite, relationship
@@ -82,7 +83,13 @@ class SqlAlchemyUnitOfWork(UnitOfWork):
 class SqlAlchemy:
 
     def __init__(self, uri, bus):
-        self.engine = create_engine(uri)
+        # re: connect_args and StaticPool, see
+        # http://docs.sqlalchemy.org/en/latest/dialects/sqlite.html#using-a-memory-database-in-multiple-threads
+        self.engine = create_engine(
+            uri,
+            connect_args={'check_same_thread': False},
+            poolclass=StaticPool
+        )
         self.bus = bus
         self._session_maker = scoped_session(sessionmaker(self.engine),)
 
