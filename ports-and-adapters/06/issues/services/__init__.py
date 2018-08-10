@@ -1,35 +1,34 @@
-import issues.domain.emails
 from issues.domain.model import Issue, IssueReporter
-from issues.domain import emails, messages
+from issues.domain import emails
 
 
 def report_issue(start_uow, cmd):
     reporter = IssueReporter(cmd.reporter_name, cmd.reporter_email)
     issue = Issue(cmd.issue_id, reporter, cmd.problem_description)
-    with start_uow() as tx:
-        tx.issues.add(issue)
-        tx.commit()
+    with start_uow() as uow:
+        uow.issues.add(issue)
+        uow.commit()
 
 
 def triage_issue(start_uow, cmd):
-    with start_uow() as tx:
-        issue = tx.issues.get(cmd.issue_id)
+    with start_uow() as uow:
+        issue = uow.issues.get(cmd.issue_id)
         issue.triage(cmd.priority, cmd.category)
-        tx.commit()
+        uow.commit()
 
 
 def pick_issue(start_uow, cmd):
-    with start_uow() as tx:
-        issue = tx.issues.get(cmd.issue_id)
+    with start_uow() as uow:
+        issue = uow.issues.get(cmd.issue_id)
         issue.assign(cmd.picked_by)
-        tx.commit()
+        uow.commit()
 
 
 def assign_issue(start_uow, cmd):
-    with start_uow() as tx:
-        issue = tx.issues.get(cmd.issue_id)
+    with start_uow() as uow:
+        issue = uow.issues.get(cmd.issue_id)
         issue.assign(cmd.assigned_to, cmd.assigned_by)
-        tx.commit()
+        uow.commit()
 
 
 def on_issue_assigned_to_engineer(view_issue, sender, evt):
