@@ -5,13 +5,32 @@ To run the code, set up a python 3 virtual environment, then
 
 You will need Sqlite installed. For the API, you'll need write-access to the current directory, or you can just hack the connection string in adapters/flask.py
 
-If you `cd issues` you can now run tests with `run-contexts -v`.
 
-To run the API
+## running the quick tests
 
 ```bash
-$ export FLASK_APP=issues.adapters.flask
-$ flask run 
+run-contexts issues/slow_tests
+```
+
+## running the slow tests
+
+First, run the API flask app in a separate terminal:
+
+```bash
+python -m issues.adapters.flask
+```
+
+Then, run:
+
+```bash
+run-contexts issues/slow_tests
+```
+
+
+# To run the API
+
+```bash
+$ python -m issues.adapters.flask
  flask run
  * Serving Flask app "issues.adapters.flask"
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
