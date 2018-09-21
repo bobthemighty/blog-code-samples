@@ -1,7 +1,7 @@
 # Ports and Adapters, Message Bus, Unit of Work: (arguably) more Pythonic implementations
 
 Hi, I'm Harry, Bob's coauthor for this series on architecture.  Now I don't pretend
-to being an architect, but I do know a bit about Python.  You know the apocryphal tale
+to be an architect<sup>[*](#myfootnote1)</sup>, but I do know a bit about Python.  You know the apocryphal tale
 about [bikeshedding](https://en.wikipedia.org/wiki/Law_of_triviality)?  Everyone wants to be able to express an opinion, even if it's only
 about the colour of the biksheds?  Well this will be me essentially doing that about 
 Bob's code.  Not questioning the architecture.  Just the cosmetics.  But, readability
@@ -321,3 +321,4 @@ We may be drifting a little too far into "removing classes for its own sake" ter
 you now have a few more options to use for inspiration in your own code.
 
 
+<a name="fn1">*</a><small><i>NARRATORS VOICE: Harry pretends to be an architect <b>all</b> the time"</i></small>
