@@ -2,9 +2,13 @@
 
 Hi, I'm Harry, Bob's coauthor for this series on architecture.  Now I don't pretend
 to being an architect, but I do know a bit about Python.  You know the apocryphal tale
-about bikeshedding?  Everyone wants to be able to express an opinion, even if it's only
+about [bikeshedding](https://en.wikipedia.org/wiki/Law_of_triviality)?  Everyone wants to be able to express an opinion, even if it's only
 about the colour of the biksheds?  Well this will be me essentially doing that about 
-Bob's code.  Not questioning the architecture.  Just the cosmetics.
+Bob's code.  Not questioning the architecture.  Just the cosmetics.  But, readability
+counts, so here we go!
+
+
+## "Stop Writing Classes"
 
 Despite the fact that Bob swears blind that he was a functional programmer for years,
 I think Bob does occacsionally let the OO habits of the C# world take over, and
@@ -22,7 +26,7 @@ Let's see if we can't replace a few classes with some more Pythonic patterns, an
 it makes some of those architectural patterns easier to read, implement and understand.
 
 
-# Events and Command handlers as functions
+# Command handlers as functions
 
 
 > If a class only has one method other than its constructor, it should probably be a function
@@ -48,13 +52,11 @@ class ReportIssueCommand(NamedTuple):
     reporter_email: str
     problem_description: str
 ```
-
-this wasn't available at the time of writing, but [Python 3.7 dataclasses]()
+This wasn't available at the time of writing, but [Python 3.7 dataclasses]()
 might be worth a look too. You'd probably want to use `frozen=True` to
 replicate the immutabilty of namedtuples...
 
-
-For handlers, use of a class is probably more up for debate:
+But for handlers, use of a class is probably more up for debate:
 
 ```python
 class ReportIssueHandler(Handles[messages.ReportIssueCommand]):
@@ -71,7 +73,7 @@ class ReportIssueHandler(Handles[messages.ReportIssueCommand]):
             uow.commit()
 ```
 
-A "handler" definitely feels like a case of nouning a verb.  How about:
+Even the word "handler" definitely feels like a case of nouning a verb.  How about:
 
 ```python
 def report_issue(start_uow, cmd):
@@ -117,20 +119,27 @@ def report_issue(start_uow, cmd):
 # managing units of work without a UnitOfWorkManager
 
 
-The _unit of work_ pattern makes a lot of sense.  Being able to manage blocks of code
-that needed to be executed "together" and atomically, makes a lot of sense.  It might
-be as simple as just wrapping everything in a single database transaction, but you
-might also want to manage some other types of permanent storage (filesystem, cloud storage).
+The **Unit of Work** pattern is one of the more straightforward ones; it's easy to understand
+why you might want to manage blocks of code that need to be executed "together"
+and atomically.
 
-But you can also think of a unit of work as applying to all the events that
-might be raised from a block of code:  raise all the events in the happy case, or
-raising none of them (roll back) if an error occurs at any point, so that the command
-handler can be replayed later without generating duplicate events.
+In a simple project that might just mean wrapping everything in a single
+database transaction, but you might also want to manage some other types of
+permanent storage (filesystem, cloud storage...).
 
-A Python context manager is the right pattern here, but does the implementation really
-need to involve three different classes?
+If you're using domain events, you might also want to apply the unit-of-work concept
+to them as well:  for a given block of code, perhaps a command handler, either raise
+all the events in the happy case, or raise none at all (analogous to a rollback) if an error
+occurs at any point. This gives you the option to replay the command handler later without
+worrying about duplicate events.
+
+In that case your unit of work manager needs to grow some logic for tracking a stack of events
+raised by a block of code, as suggested in the [domain events post](https://io.made.com/why-use-domain-events/).
+
+Either way, a Python context manager is the right pattern here, but does the
+implementation really need to involve three different classes?
+
 ```python
-
 class SqlAlchemy:
 
     def __init__(self, uri):
@@ -178,7 +187,7 @@ Each class does have a purpose of course:
 * `SqlAlchemyUnitOfWorkManager` is meant to hold logic about when to create new database sessions and when to re-use existing ones
 * `SqlAlchemyUnitOfWork` is the actual context manager that holds the logic for commits, rollbacks, and publishing events atomically.
 
-But do we really need classes for all three?  SqlAlchemy itself already manages sessions for us.  Perhaps we could just have one
+But can we make things a little simpler?  SqlAlchemy itself already manages sessions for us.  Perhaps we could just have one
 model for the database, and another for the units of work?
 
 
@@ -196,8 +205,9 @@ class SqlAlchemy:
 ```
 
 
-Or you might decide that your unit of work is simple enough, perhaps just a database transaction, that you can get away
-with a single method, using `contextlib.contextmanager` and the `yield` keyword:
+If you're not using domain events and your unit of work is simple enough,
+perhaps just a database transaction, that you can get away with a single
+method, using `contextlib.contextmanager` and the `yield` keyword:
 
 ```python
 from contextlib import contextmanager
@@ -214,6 +224,7 @@ class SqlAlchemy:
         except Exception as e:
             session.rollback()
             session.close()
-
 ```
+Although if the only thing you're putting into your unit of work is a database transaction, perhaps
+you don't need a unit-of-work class at all?
 
