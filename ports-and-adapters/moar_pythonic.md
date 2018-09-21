@@ -3,7 +3,7 @@
 Hi, I'm Harry, Bob's coauthor for this series on architecture.  Now I don't pretend
 to being an architect, but I do know a bit about Python.  You know the apocryphal tale
 about [bikeshedding](https://en.wikipedia.org/wiki/Law_of_triviality)?  Everyone wants to be able to express an opinion, even if it's only
-about the colour of the biksheds?  Well this will be me essentially doing that about 
+about the colour of the bikesheds?  Well this will be me essentially doing that about 
 Bob's code.  Not questioning the architecture.  Just the cosmetics.  But, readability
 counts, so here we go!
 
