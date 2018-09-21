@@ -37,7 +37,7 @@ or
 
 > look for classes with names like "Handler", "Maker", "Builder", "Factory", and you'll probably
 > find some good candidates for converting to functions
--Me.  but hardly a novel thought.
+- Me.  but hardly a novel thought.
 
 If you're implementing the _Command Handler_ pattern, you're going to need to represent
 commands and handlers.
@@ -52,7 +52,19 @@ class ReportIssueCommand(NamedTuple):
     reporter_email: str
     problem_description: str
 ```
-This wasn't available at the time of writing, but [Python 3.7 dataclasses]()
+
+Unless you're actually using `mypy`, those types aren't adding much value
+however. The alternative would be the more "classic" namedtuple syntax:
+
+```python
+ReportIssueCommand = namedtuple("ReportIssueCommand", ["issue_id", "reporter_name", "reporter_email", "problem_description"])
+# or the shorter syntax if it doesn't make you nervous:
+ReportIssueCommand = namedtuple("ReportIssueCommand", "issue_id reporter_name reporter_email problem_description")
+# come on, have you seen the implementation? nameduples are magic anyway.  get with it!
+```
+
+This wasn't available at the time of writing, but
+[Python 3.7 dataclasses](https://docs.python.org/3/library/dataclasses.html)
 might be worth a look too. You'd probably want to use `frozen=True` to
 replicate the immutabilty of namedtuples...
 
@@ -73,7 +85,11 @@ class ReportIssueHandler(Handles[messages.ReportIssueCommand]):
             uow.commit()
 ```
 
-Even the word "handler" definitely feels like a case of nouning a verb.  How about:
+Using a class like this does buy you a nice separation of the dependencies to
+be injected (in the constructor) and the actual command that the handler will
+be applied to.
+
+But the word "handler" definitely feels like a case of nouning a verb.  So, consider:
 
 ```python
 def report_issue(start_uow, cmd):
@@ -84,19 +100,20 @@ def report_issue(start_uow, cmd):
         uow.commit()
 ```
 
-## credit where credit's due?
+## tying commands to handlers
 
 You need some way of connecting commands with their handlers.  The most boring way of
-doing that is in some sort of bootstrap/config code, but you might want to do so 
-"inline" in your handler definition.
+doing that is in some sort of bootstrap/config code 
+(as in [this example](https://io.made.com/dependency-injection-with-type-signatures-in-python/#youdontneedtouseaframeworkfordi))
+but you might want also want to do so "inline" in your handler definition.
 
 Bob's way, where the handler class inherits from
 `Handles[message.ReportIssueCommand]` definitely deserves some points for being
-easily readable, although you might not want to get into the sausage-factory
+easily readable, but you really don't want to get into the sausage-factory
 of the actual implementation, involving, as it does, the controversial `typing` module.
 
 
-Instead, a decorator might do the trick:
+You might be more comfortable with a decorator instead:
 
 ```python
 @handles(messages.ReportIssueCommand)
@@ -113,6 +130,7 @@ Of course that might interfere with your (possible) desire to use decorators for
 def report_issue(start_uow, cmd):
     ...
 ```
+
 
 
 
@@ -136,8 +154,35 @@ worrying about duplicate events.
 In that case your unit of work manager needs to grow some logic for tracking a stack of events
 raised by a block of code, as suggested in the [domain events post](https://io.made.com/why-use-domain-events/).
 
-Either way, a Python context manager is the right pattern here, but does the
-implementation really need to involve three different classes?
+## a unit of work should probably be a context manager
+
+Either way, a Python context manager is the right pattern here.  Here's the outline of a class-based
+one:
+
+```python
+class SqlAlchemyUnitOfWork(UnitOfWork):
+
+    def __init__(self, session_factory, bus):
+        ...
+
+    def __enter__(self):
+        self.session = self.session_factory()
+        self.events = []
+        return self
+
+    def __exit__(self):
+        self.session.close()
+        self.publish_events()
+
+    def commit(self):
+        ...
+
+    def publish_events(self, session, ctx):
+        ...
+```
+
+
+But does the rest of the implementation really need to involve three different classes?
 
 ```python
 class SqlAlchemy:
@@ -159,35 +204,19 @@ class SqlAlchemyUnitOfWorkManager(UnitOfWorkManager):
 
     def start(self):
         return SqlAlchemyUnitOfWork(self.session_factory, self.bus)
-
-
-class SqlAlchemyUnitOfWork(UnitOfWork):
-
-    def __init__(self, session_factory, bus):
-        ...
-
-    def __enter__(self):
-        ...
-
-    def __exit__(self):
-        ...
-
-    def commit(self):
-        ...
-
-    def gather_events(self, session, ctx):
-        ...
 ```
+
 
 
 Each class does have a purpose of course:
 
 * `SqlAlchemy` captures config info about SqlAlchemy and our database engine, it has methods like `create_schema` that can re-create
   the database for us if we need.
-* `SqlAlchemyUnitOfWorkManager` is meant to hold logic about when to create new database sessions and when to re-use existing ones
+* `SqlAlchemyUnitOfWorkManager` is meant to hold logic about when to create new database sessions and when to re-use existing ones, 
+  and it ties the message bus to each unit of work.
 * `SqlAlchemyUnitOfWork` is the actual context manager that holds the logic for commits, rollbacks, and publishing events atomically.
 
-But can we make things a little simpler?  SqlAlchemy itself already manages sessions for us.  Perhaps we could just have one
+But can we make things a little simpler?  SqlAlchemy (the library) already knows how manage sessions for us.  Perhaps we could just have one
 model for the database, and another for the units of work?
 
 
@@ -196,17 +225,20 @@ from sqlalchemy.orm import sessionmaker
 
 class SqlAlchemy:
 
-    def __init__(self, uri):
+    def __init__(self, uri, bus):
         self.engine = create_engine(uri)
         self.session_factory = sessionmaker(self.engine)
+        self.bus = bus
 
     def start_unit_of_work(self):
         return SqlAlchemyUnitOfWork(self.session_factory, self.bus)
 ```
 
+## could you use an @contextmanager?
 
-If you're not using domain events and your unit of work is simple enough,
-perhaps just a database transaction, that you can get away with a single
+We're down to just two classes.  Next you might ask whether you _really_ need
+a class for your unit of work context manager.  If your client code doesn't need to call
+a `commit` method explicitly, then you might be able to get away with a single
 method, using `contextlib.contextmanager` and the `yield` keyword:
 
 ```python
@@ -218,13 +250,19 @@ class SqlAlchemy:
     @contextmanager
     def start_unit_of_work(self):
         session = self.session_factory()
+        events = []
         try:
             yield session
+            self.publish_events(session)
             session.commit()
         except Exception as e:
             session.rollback()
             session.close()
+
+    def publish_events(self, session):
+        flushed_objects = [e for e in session.new] + [e for e in session.dirty]
+        for o in flushed_objects:
+            for e in o.events
+                self.bus.handle(e)
 ```
-Although if the only thing you're putting into your unit of work is a database transaction, perhaps
-you don't need a unit-of-work class at all?
 
