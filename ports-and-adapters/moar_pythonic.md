@@ -266,3 +266,58 @@ class SqlAlchemy:
                 self.bus.handle(e)
 ```
 
+## the singleton pattern in Python
+
+We still have one final class, `SqlAlchemy`, which exists to 
+
+- know how to talk to our database
+- give us units of work
+- tie the message bus to it.
+
+It's essentially a singleton, in that our application is only ever meant to have one instance of it.  There are lots of
+[ways to implement the singleton pattern in Python](https://stackoverflow.com/questions/31875/is-there-a-simple-elegant-way-to-define-singletons)
+
+In this case our implementation is the ultra-simple "by convention there is only one instance of this class", but of the
+suggestions above, my favourite is probably just "use a module".
+
+
+```python
+# adapters/sqlalchemy.py
+
+BUS = None
+SESSION_MAKER = None
+
+
+# to be called in our bootstrap/config script
+def setup(uri, bus):
+  global BUS, SESSION_MAKER
+  BUS = bus
+  SESSION_MAKER = sessionmaker(create_engine(uri))
+  
+
+
+@contextmanager
+def start_unit_of_work():
+    session = SESSION_MAKER()
+    events = []
+    try:
+        yield session
+        publish_events(session)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        session.close()
+
+def publish_events(session):
+    flushed_objects = [e for e in session.new] + [e for e in session.dirty]
+    for o in flushed_objects:
+        for e in o.events
+            BUS.handle(e)
+
+```
+
+
+We may be drifting a little too far into "removing classes for its own sake" territory here.  But hopefully
+you now have a few more options to use for inspiration in your own code.
+
+
