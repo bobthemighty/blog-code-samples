@@ -320,5 +320,6 @@ def publish_events(session):
 We may be drifting a little too far into "removing classes for its own sake" territory here.  But hopefully
 you now have a few more options to use for inspiration in your own code.
 
+----
 
-<a name="fn1">*</a><small><i>NARRATORS VOICE: Harry pretends to be an architect <b>all</b> the time"</i></small>
+<a name="fn1">*</a><small><i>NARRATORS VOICE: Harry pretends to be an architect <b>all</b> the time</i></small>
