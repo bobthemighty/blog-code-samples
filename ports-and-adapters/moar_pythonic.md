@@ -11,11 +11,11 @@ counts, so here we go!
 ## "Stop Writing Classes"
 
 Despite the fact that Bob swears blind that he was a functional programmer for years,
-I think Bob does occacsionally let the OO habits of the C# world take over, and
-he sees classes everywhere, including plenty of places where they just don't help.
+I think Bob does occasionally let the OO-heavy habits of the C# world take over, and
+he sees classes everywhere, including plenty of places where they don't really help.
 
 Like the man said, [Stop Writing Classes](https://www.youtube.com/watch?v=o9pEzgHorH0),
-or [escape from the Kingdom of Nouns](https://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html), 
+or [escape from the Kingdom of Nouns!](https://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html), 
 or perhaps simply:
 
 > It is not enough to simply stop writing Java.  You must also stop yourself from writing
@@ -68,7 +68,8 @@ This wasn't available at the time of writing, but
 might be worth a look too. You'd probably want to use `frozen=True` to
 replicate the immutabilty of namedtuples...
 
-But for handlers, use of a class is probably more up for debate:
+
+But for handlers, use of a class is definitely more up for debate:
 
 ```python
 class ReportIssueHandler(Handles[messages.ReportIssueCommand]):
@@ -122,7 +123,7 @@ def report_issue(start_uow, cmd):
 ```
 
 
-Of course that might interfere with your (possible) desire to use decorators for dependency injection:
+But it might get confusing if you also want to use decorators for dependency injection:
 
 
 ```python
@@ -145,11 +146,12 @@ In a simple project that might just mean wrapping everything in a single
 database transaction, but you might also want to manage some other types of
 permanent storage (filesystem, cloud storage...).
 
-If you're using domain events, you might also want to apply the unit-of-work concept
-to them as well:  for a given block of code, perhaps a command handler, either raise
-all the events in the happy case, or raise none at all (analogous to a rollback) if an error
-occurs at any point. This gives you the option to replay the command handler later without
-worrying about duplicate events.
+If you're using [domain events](https://io.made.com/why-use-domain-events/),
+you might also want to apply the unit-of-work concept to them as well:  for a
+given block of code, perhaps a command handler, either raise all the events in
+the happy case, or raise none at all (analogous to a rollback) if an error
+occurs at any point. This gives you the option to replay the command handler
+later without worrying about duplicate events.
 
 In that case your unit of work manager needs to grow some logic for tracking a stack of events
 raised by a block of code, as suggested in the [domain events post](https://io.made.com/why-use-domain-events/).
@@ -277,8 +279,11 @@ We still have one final class, `SqlAlchemy`, which exists to
 It's essentially a singleton, in that our application is only ever meant to have one instance of it.  There are lots of
 [ways to implement the singleton pattern in Python](https://stackoverflow.com/questions/31875/is-there-a-simple-elegant-way-to-define-singletons)
 
-In this case our implementation is the ultra-simple "by convention there is only one instance of this class", but of the
-suggestions above, my favourite is probably just "use a module".
+In this case our implementation is the ultra-simple "by convention there is only one instance of this class", which is
+has a lot going for it in terms of ways to implement the singleton pattern, compared to all the complicated code-based
+solutions linked above.  If you do want a code-based solution, or if you want to continue experimenting with non-class-based
+solutions to these problems, why not use the "just use a module" solution - modules are essentially already singletons, in
+Python:
 
 
 ```python
@@ -302,13 +307,13 @@ def start_unit_of_work():
     events = []
     try:
         yield session
-        publish_events(session)
+        _publish_events(session)
         session.commit()
     except Exception as e:
         session.rollback()
         session.close()
 
-def publish_events(session):
+def _publish_events(session):
     flushed_objects = [e for e in session.new] + [e for e in session.dirty]
     for o in flushed_objects:
         for e in o.events
