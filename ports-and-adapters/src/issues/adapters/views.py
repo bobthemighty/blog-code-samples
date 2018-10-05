@@ -9,19 +9,21 @@ from issues.domain import ports
 # type, so this manual unmarshalling isn't necessary
 
 
-def read_uuid(record, column):
+def read_uuid(record):
     record = dict(record)
-    bytes_val = record[column]
+    bytes_val = record['issue_id']
     uuid_val = uuid.UUID(bytes=bytes_val)
-    record[column] = uuid_val
+    record['issue_id'] = uuid_val
     return record
 
 
-FETCH_ISSUE = """SELECT description,
+FETCH_ISSUE = """SELECT
+                 issue_id,
+                 description,
                  reporter_email,
                  reporter_name
             FROM issues
-            WHERE issue_id = :id"""
+            WHERE issue_id = :issue_id"""
 
 LIST_ISSUES = """SELECT issue_id,
                  description,
@@ -32,18 +34,17 @@ LIST_ISSUES = """SELECT issue_id,
 
 def view_issue(make_session, id):
     session = make_session()
-    result = session.execute(FETCH_ISSUE, {'id': id.bytes})
+    result = session.execute(FETCH_ISSUE, {'issue_id': id.bytes})
     record = result.fetchone()
-    return dict(record)
+    return read_uuid(record)
 
 
-def list_issues(make_session, id):
+def list_issues(make_session):
     session = make_session()
     query = session.execute(LIST_ISSUES)
 
     result = []
     for r in query.fetchall():
-        r = read_uuid(r, 'issue_id')
-        result.append(r)
+        result.append(read_uuid(r))
 
     return result
