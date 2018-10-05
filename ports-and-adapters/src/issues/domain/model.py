@@ -1,7 +1,7 @@
+import abc
 from uuid import UUID
-from .messages import (
-    IssueState, IssuePriority, IssueReassigned, IssueAssignedToEngineer
-)
+from .messages import (IssueState, IssuePriority, IssueReassigned,
+                       IssueAssignedToEngineer)
 
 
 class IssueReporter:

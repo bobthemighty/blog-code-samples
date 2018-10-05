@@ -1,8 +1,8 @@
 import abc
-import functools
 from collections import defaultdict
 from uuid import UUID
 from .model import Issue
+from typing import Callable, Generic
 
 
 class IssueNotFoundException(Exception):
@@ -72,4 +72,4 @@ class MessageBus:
             handle(msg)
 
     def register(self, msg, handler, *args):
-        self.handlers[msg.__name__].append(functools.partial(handler, *args))
+        self.handlers[msg.__name__].append(handler)

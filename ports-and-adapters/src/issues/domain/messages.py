@@ -1,6 +1,6 @@
 from enum import Enum
 from uuid import UUID
-from typing import NamedTuple
+from typing import NamedTuple, Generic, TypeVar
 
 
 def event(cls):

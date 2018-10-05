@@ -37,7 +37,7 @@ def view_issue(make_session, id):
     return dict(record)
 
 
-def list_issues(make_session):
+def list_issues(make_session, id):
     session = make_session()
     query = session.execute(LIST_ISSUES)
 

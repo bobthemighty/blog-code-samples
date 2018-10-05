@@ -1,5 +1,5 @@
 import requests
-from expects import expect, equal, contain
+from expects import expect, equal
 
 
 def report_issue(reporter_name='fred',
@@ -12,7 +12,6 @@ def report_issue(reporter_name='fred',
     }
 
     resp = requests.post('http://localhost:5000/issues', json=data)
-    assert resp.ok, f'Got code {resp.status_code}, response was {resp.text}'
     return resp.headers['Location']
 
 
@@ -32,11 +31,6 @@ class When_reporting_a_new_issue:
     def it_should_have_the_correct_description(self):
         expect(self.the_issue['description']).to(
             equal('I\'m all alone and frightened.'))
-
-    def it_should_appear_in_the_list(self):
-        issues = requests.get('http://localhost:5000/issues').json()
-        issue_id = self.location.split('/')[-1]
-        expect(i['issue_id'] for i in issues).to(contain(issue_id))
 
 
 class When_assigning_an_issue_to_another_engineer:
