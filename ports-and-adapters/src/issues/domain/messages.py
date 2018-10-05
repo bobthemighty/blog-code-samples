@@ -1,6 +1,6 @@
 from enum import Enum
 from uuid import UUID
-from typing import NamedTuple, Generic, TypeVar
+from typing import NamedTuple
 
 
 def event(cls):
@@ -40,7 +40,7 @@ class IssuePriority(Enum):
 
 
 @command
-class ReportIssueCommand(NamedTuple):
+class ReportIssue(NamedTuple):
     issue_id: UUID
     reporter_name: str
     reporter_email: str
@@ -48,21 +48,21 @@ class ReportIssueCommand(NamedTuple):
 
 
 @command
-class TriageIssueCommand(NamedTuple):
+class TriageIssue(NamedTuple):
     issue_id: UUID
     category: str
     priority: IssuePriority
 
 
 @command
-class AssignIssueCommand(NamedTuple):
+class AssignIssue(NamedTuple):
     issue_id: UUID
     assigned_to: str
     assigned_by: str
 
 
 @command
-class PickIssueCommand(NamedTuple):
+class PickIssue(NamedTuple):
     issue_id: UUID
     picked_by: str
 

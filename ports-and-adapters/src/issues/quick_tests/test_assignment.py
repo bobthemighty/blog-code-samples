@@ -1,15 +1,15 @@
 import uuid
 
-from .adapters import FakeUnitOfWork, FakeEmailSender, FakeViewBuilder
+from .adapters import FakeUnitOfWork, fake_sender
 from .shared_contexts import With_a_triaged_issue
 from .matchers import have_raised
 
-from issues.services import (AssignIssueHandler, IssueAssignedHandler,
-                             PickIssueHandler)
-from issues.domain.messages import (AssignIssueCommand, IssueAssignedToEngineer,
+from issues.services import (assign_issue, on_issue_assigned_to_engineer, pick_issue)
+from issues.domain.messages import (AssignIssue, IssueAssignedToEngineer,
                                     IssueReassigned, IssueState, IssuePriority,
-                                    PickIssueCommand)
+                                    PickIssue)
 from issues.domain.model import Issue, IssueReporter
+from issues.domain.emails import EmailSender
 
 from expects import expect, have_len, equal, be_true
 
@@ -20,11 +20,9 @@ class When_assigning_an_issue(With_a_triaged_issue):
     assigned_by = 'norman@example.org'
 
     def because_we_assign_the_issue(self):
-        handler = AssignIssueHandler(self.uow)
-        cmd = AssignIssueCommand(self.issue_id, self.assigned_to,
-                                 self.assigned_by)
+        cmd = AssignIssue(self.issue_id, self.assigned_to, self.assigned_by)
 
-        handler.handle(cmd)
+        assign_issue(lambda: self.uow, cmd)
 
     def the_issue_should_be_assigned_to_percy(self):
         expect(self.issue.assignment.assigned_to).to(equal(self.assigned_to))
@@ -50,10 +48,9 @@ class When_picking_an_issue(With_a_triaged_issue):
     picked_by = 'percy@example.org'
 
     def because_we_pick_the_issue(self):
-        handler = PickIssueHandler(self.uow)
-        cmd = PickIssueCommand(self.issue_id, self.picked_by)
+        cmd = PickIssue(self.issue_id, self.picked_by)
 
-        handler.handle(cmd)
+        pick_issue(lambda: self.uow, cmd)
 
     def the_issue_should_be_assigned_to_percy(self):
         expect(self.issue.assignment.assigned_to).to(equal(self.picked_by))
@@ -80,11 +77,10 @@ class When_reassigning_an_issue(With_a_triaged_issue):
         self.issue.assign(self.assigned_to, self.assigned_by)
 
     def because_we_assign_the_issue(self):
-        handler = AssignIssueHandler(self.uow)
-        cmd = AssignIssueCommand(self.issue_id, self.new_assigned_to,
-                                 self.new_assigned_by)
+        cmd = AssignIssue(self.issue_id, self.new_assigned_to,
+                          self.new_assigned_by)
 
-        handler.handle(cmd)
+        assign_issue(lambda: self.uow, cmd)
 
     def it_should_have_raised_issue_reassigned(self):
         expect(self.issue).to(
@@ -98,30 +94,27 @@ class When_an_issue_is_assigned:
     assigned_by = 'helga@example.org'
 
     def given_a_view_model_and_emailer(self):
-        self.view_builder = FakeViewBuilder({
-            'description':
-            'a bad thing happened',
-            'reporter_email':
-            'reporter@example.org',
-            'reported_name':
-            'Reporty McReportface'
-        })
+        self.view_model = {
+            'description': 'a bad thing happened',
+            'reporter_email': 'reporter@example.org',
+            'reported_name': 'Reporty McReportface'
+        }
 
-        self.emailer = FakeEmailSender()
+        self.sent = []
+        self.emailer = EmailSender(fake_sender(self.sent))
 
     def because_we_raise_issue_assigned(self):
         evt = IssueAssignedToEngineer(self.issue_id, self.assigned_to,
                                       self.assigned_by)
 
-        handler = IssueAssignedHandler(self.view_builder, self.emailer)
-        handler.handle(evt)
+        on_issue_assigned_to_engineer(lambda x: self.view_model, self.emailer, evt)
 
     def it_should_send_an_email(self):
-        expect(self.emailer.sent).to(have_len(1))
+        expect(self.sent).to(have_len(1))
 
     def it_should_have_the_correct_subject(self):
-        expect(self.emailer.sent[0].subject).to(
+        expect(self.sent[0].subject).to(
             equal('Hi barry@example.org - you\'ve been assigned an issue'))
 
     def it_should_be_to_the_correct_recipient(self):
-        expect(self.emailer.sent[0].recipient).to(equal(self.assigned_to))
+        expect(self.sent[0].recipient).to(equal(self.assigned_to))

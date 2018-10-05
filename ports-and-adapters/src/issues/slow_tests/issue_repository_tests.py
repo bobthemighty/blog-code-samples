@@ -1,8 +1,8 @@
 from issues.domain.ports import MessageBus
 from issues.domain.model import Issue
-from issues.domain.messages import ReportIssueCommand
+from issues.domain.messages import ReportIssue
 from issues.adapters.orm import SqlAlchemy
-from issues.adapters.views import IssueViewBuilder
+from issues.adapters import views
 
 from issues.adapters import config
 
@@ -17,14 +17,13 @@ class When_we_load_a_persisted_issue:
 
     def given_a_database_containing_an_issue(self):
 
-        cmd = ReportIssueCommand(self.issue_id, 'fred', 'fred@example.org',
-                                 'forgot my password again')
-        bus = config.container.resolve(MessageBus)
+        cmd = ReportIssue(self.issue_id, 'fred', 'fred@example.org',
+                          'forgot my password again')
+        bus = config.bus
         bus.handle(cmd)
 
     def because_we_load_the_issues(self):
-        view_builder = config.container.resolve(IssueViewBuilder)
-        self.issue = view_builder.fetch(self.issue_id)
+        self.issue = views.view_issue(config.db.get_session, self.issue_id)
 
     def it_should_have_the_correct_description(self):
         expect(self.issue['id']).to(equal(self.issue_id))

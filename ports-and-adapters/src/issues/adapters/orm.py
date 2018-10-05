@@ -4,6 +4,7 @@ import typing
 import uuid
 
 import sqlalchemy
+from sqlalchemy.pool import StaticPool
 from sqlalchemy import (Table, Column, MetaData, String, Integer, Text,
                         ForeignKey, create_engine, event)
 from sqlalchemy.orm import mapper, scoped_session, sessionmaker, composite, relationship
@@ -18,16 +19,6 @@ from issues.domain.ports import (IssueLog, UnitOfWork, UnitOfWorkManager,
                                  MessageBus)
 
 SessionFactory = typing.Callable[[], sqlalchemy.orm.Session]
-
-
-class SqlAlchemyUnitOfWorkManager(UnitOfWorkManager):
-
-    def __init__(self, session_maker: SessionFactory, bus: MessageBus) -> None:
-        self.session_maker = session_maker
-        self.bus = bus
-
-    def start(self):
-        return SqlAlchemyUnitOfWork(self.session_maker, self.bus)
 
 
 class IssueRepository(IssueLog):
@@ -91,18 +82,27 @@ class SqlAlchemyUnitOfWork(UnitOfWork):
 
 class SqlAlchemy:
 
-    def __init__(self, uri):
-        self.engine = create_engine(uri)
+    def __init__(self, uri, bus):
+        # re: connect_args and StaticPool, see
+        # http://docs.sqlalchemy.org/en/latest/dialects/sqlite.html#using-a-memory-database-in-multiple-threads
+        self.engine = create_engine(
+            uri,
+            connect_args={'check_same_thread': False},
+            poolclass=StaticPool
+        )
+        self.bus = bus
         self._session_maker = scoped_session(sessionmaker(self.engine),)
-
-    def register_in(self, container):
-        container.register(SessionFactory, lambda: self._session_maker)
-        container.register(UnitOfWorkManager, SqlAlchemyUnitOfWorkManager)
 
     def recreate_schema(self):
         self.configure_mappings()
         drop_database(self.engine.url)
         self.create_schema()
+
+    def get_session(self):
+        return self._session_maker()
+
+    def start_unit_of_work(self):
+        return SqlAlchemyUnitOfWork(self._session_maker, self.bus)
 
     def create_schema(self):
         create_database(self.engine.url)
@@ -156,15 +156,3 @@ class SqlAlchemy:
                 'assigned_to': assignments.c.assigned_to,
                 'assigned_by': assignments.c.assigned_by
             })
-
-
-class SqlAlchemySessionContext:
-
-    def __init__(self, session_maker):
-        self._session_maker = session_maker
-
-    def __enter__(self):
-        self._session = self._session_maker()
-
-    def __exit__(self, type, value, traceback):
-        self._session_maker.remove()

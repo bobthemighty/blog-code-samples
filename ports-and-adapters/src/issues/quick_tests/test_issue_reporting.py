@@ -1,9 +1,9 @@
 import uuid
 
 from .adapters import FakeUnitOfWork
-from issues.services import ReportIssueHandler
-from issues.domain.messages import ReportIssueCommand, IssueState, IssuePriority
+from issues.domain.messages import ReportIssue, IssueState, IssuePriority
 from issues.domain.model import Issue
+from issues.services import report_issue
 
 from expects import expect, have_len, equal, be_true
 
@@ -19,10 +19,9 @@ class When_reporting_an_issue:
         self.uow = FakeUnitOfWork()
 
     def because_we_report_a_new_issue(self):
-        handler = ReportIssueHandler(self.uow)
-        cmd = ReportIssueCommand(id, name, email, desc)
+        cmd = ReportIssue(id, name, email, desc)
 
-        handler.handle(cmd)
+        report_issue(lambda: self.uow, cmd)
 
     def the_handler_should_have_created_a_new_issue(self):
         expect(self.uow.issues).to(have_len(1))

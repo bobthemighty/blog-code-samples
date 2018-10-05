@@ -17,44 +17,33 @@ def read_uuid(record, column):
     return record
 
 
-class IssueViewBuilder(ports.IssueViewBuilder):
-
-    _q = """SELECT description,
+FETCH_ISSUE = """SELECT description,
                  reporter_email,
                  reporter_name
             FROM issues
             WHERE issue_id = :id"""
 
-    def __init__(self, session_factory: SessionFactory):
-        self.session_factory = session_factory
-
-    def fetch(self, id):
-        session = self.session_factory()
-        result = session.execute(self._q, {'id': id.bytes})
-        record = result.fetchone()
-        return dict(record)
-
-
-class IssueListBuilder:
-
-    _q = """SELECT issue_id,
+LIST_ISSUES = """SELECT issue_id,
                  description,
                  reporter_email,
                  reporter_name
             FROM issues"""
 
-    def __init__(self, session_factory: SessionFactory):
-        self.session_factory = session_factory
 
-    def fetch(self):
-        session = self.session_factory()
-        query = session.execute(
-            'SELECT issue_id, description, reporter_email, reporter_name ' +
-            ' FROM issues')
+def view_issue(make_session, id):
+    session = make_session()
+    result = session.execute(FETCH_ISSUE, {'id': id.bytes})
+    record = result.fetchone()
+    return dict(record)
 
-        result = []
-        for r in query.fetchall():
-            r = read_uuid(r, 'issue_id')
-            result.append(r)
 
-        return result
+def list_issues(make_session):
+    session = make_session()
+    query = session.execute(LIST_ISSUES)
+
+    result = []
+    for r in query.fetchall():
+        r = read_uuid(r, 'issue_id')
+        result.append(r)
+
+    return result

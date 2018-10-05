@@ -1,4 +1,5 @@
 import abc
+import functools
 from collections import defaultdict
 from uuid import UUID
 from .model import Issue
@@ -60,32 +61,15 @@ class CommandAlreadySubscribedException(Exception):
     pass
 
 
-class HandlerRegistry:
-
-    def get_handlers(self, type):
-        pass
-
-
 class MessageBus:
 
-    def __init__(self, registry: HandlerRegistry):
-        self.registry = registry
+    def __init__(self):
+        self.handlers = defaultdict(list)
 
     def handle(self, msg):
-        subscribers = self.registry.get_handlers(type(msg))
-        for subscriber in subscribers:
-            subscriber.handle(msg)
+        subscribers = self.handlers[type(msg).__name__]
+        for handle in subscribers:
+            handle(msg)
 
-
-class IssueViewBuilder:
-
-    @abc.abstractmethod
-    def fetch(self, id):
-        pass
-
-
-class IssueListViewBuilder:
-
-    @abc.abstractmethod
-    def fetch(self):
-        pass
+    def register(self, msg, handler, *args):
+        self.handlers[msg.__name__].append(functools.partial(handler, *args))

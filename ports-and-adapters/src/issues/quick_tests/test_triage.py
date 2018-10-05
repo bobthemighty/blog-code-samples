@@ -2,8 +2,8 @@ import uuid
 
 from .shared_contexts import With_a_new_issue
 
-from issues.services import TriageIssueHandler
-from issues.domain.messages import TriageIssueCommand, IssuePriority, IssueState
+from issues.services import triage_issue
+from issues.domain.messages import TriageIssue, IssuePriority, IssueState
 from issues.domain.model import Issue
 
 from expects import expect, have_len, equal, be_true
@@ -16,10 +16,9 @@ class When_triaging_an_issue(With_a_new_issue):
     priority = IssuePriority.Low
 
     def because_we_triage_the_issue(self):
-        handler = TriageIssueHandler(self.uow)
-        cmd = TriageIssueCommand(self.issue_id, self.category, self.priority)
+        cmd = TriageIssue(self.issue_id, self.category, self.priority)
 
-        handler.handle(cmd)
+        triage_issue(lambda: self.uow, cmd)
 
     def the_issue_should_have_a_priority_set(self):
         expect(self.issue.priority).to(equal(IssuePriority.Low))

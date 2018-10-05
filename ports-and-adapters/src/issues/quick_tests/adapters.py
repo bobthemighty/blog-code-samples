@@ -53,22 +53,13 @@ class FakeUnitOfWork(UnitOfWork, UnitOfWorkManager):
         return self._issues
 
 
-class FakeEmailSender(EmailSender):
-
-    sent_mail = namedtuple('fakes_sent_mail',
-                           ['recipient', 'sender', 'subject', 'body'])
-
-    def __init__(self):
-        self.sent = []
-
-    def _do_send(self, recipient, sender, subject, body):
-        self.sent.append(self.sent_mail(recipient, sender, subject, body))
+sent_mail = namedtuple('fakes_sent_mail',
+                       ['recipient', 'sender', 'subject', 'body'])
 
 
-class FakeViewBuilder:
+def fake_sender(sent):
 
-    def __init__(self, view_model):
-        self.view_model = view_model
+    def send(recipient, sender, subject, body):
+        sent.append(sent_mail(recipient, sent_mail, subject, body))
 
-    def fetch(self, id):
-        return self.view_model
+    return send

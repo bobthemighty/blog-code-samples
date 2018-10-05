@@ -1,56 +1,26 @@
+from functools import partial
 import inspect
 import logging
 
 from . import orm
 
-from .emails import LoggingEmailSender
+from .emails import send_to_stdout
 
 import issues.domain.messages as msg
-from issues.domain import ports
+from issues.domain import ports, emails
 from issues import services, domain, adapters
 from issues.adapters import views
 
-import punq
-
-
-class PunqMessageRegistry(ports.HandlerRegistry):
-
-    def __init__(self, container):
-        self.container = container
-
-    def get_message_type(self, type):
-        try:
-            for base in type.__orig_bases__:
-                if base.__origin__ == services.Handles:
-                    return base
-        except:
-            pass
-
-    def register_all(self, module):
-        for _, type in inspect.getmembers(module, predicate=inspect.isclass):
-            self.register(type)
-
-    def register(self, type):
-        handler_service_type = self.get_message_type(type)
-        if handler_service_type is None:
-            return
-        container.register(handler_service_type, type)
-
-    def get_handlers(self, type):
-        return self.container.resolve_all(services.Handles[type])
-
-
-container = punq.Container()
-
-db = orm.SqlAlchemy('sqlite://')
+bus = ports.MessageBus()
+db = orm.SqlAlchemy('sqlite://', bus)
 db.recreate_schema()
-db.register_in(container)
+bus.register(msg.ReportIssue, services.report_issue, db.start_unit_of_work)
 
-container.register(ports.IssueViewBuilder, views.IssueViewBuilder)
-container.register(ports.IssueListViewBuilder, views.IssueListBuilder)
-container.register(domain.emails.EmailSender,
-                   adapters.emails.LoggingEmailSender)
-messages = PunqMessageRegistry(container)
-container.register(ports.HandlerRegistry, messages)
-container.register(ports.MessageBus)
-messages.register_all(services)
+bus.register(msg.TriageIssue, services.triage_issue, db.start_unit_of_work)
+
+bus.register(msg.PickIssue, services.pick_issue, db.start_unit_of_work)
+
+bus.register(msg.IssueAssignedToEngineer,
+             services.on_issue_assigned_to_engineer,
+             partial(views.view_issue, db.get_session),
+             emails.EmailSender(send_to_stdout))

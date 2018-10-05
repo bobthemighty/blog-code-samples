@@ -25,11 +25,10 @@ IssueAssignedToMe = MailTemplate(
 
 class EmailSender:
 
-    @abc.abstractmethod
-    def _do_send(self, request: MailRequest):
-        pass
+    def __init__(self, send):
+        self._send = send
 
     def send(self, request: MailRequest, data: TemplateData):
-        self._do_send(request.to_addr, request.from_addr,
-                      request.template.subject.render(data),
-                      request.template.body.render(data))
+        self._send(request.to_addr, request.from_addr,
+                   request.template.subject.render(data),
+                   request.template.body.render(data))
