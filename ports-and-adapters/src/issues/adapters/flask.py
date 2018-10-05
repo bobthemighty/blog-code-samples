@@ -1,40 +1,48 @@
 import uuid
 from flask import Flask, request, jsonify
-from issues.adapters.orm import SqlAlchemy
-from issues.adapters.views import IssueViewBuilder, IssueListBuilder
-
-from issues.services import ReportIssueHandler
-from issues.domain.commands import ReportIssueCommand
+from . import config
+from issues.domain.messages import ReportIssueCommand, AssignIssueCommand
 
 app = Flask('issues')
 
-db = SqlAlchemy('sqlite:///issues.db')
-db.configure_mappings()
-db.create_schema()
+
+@app.before_request
+def get_auth_header():
+    request.user = request.headers.get('X-email')
 
 
 @app.route('/issues', methods=['POST'])
 def report_issue():
     issue_id = uuid.uuid4()
     cmd = ReportIssueCommand(issue_id=issue_id, **request.get_json())
-
-    handler = ReportIssueHandler(db.unit_of_work_manager)
-    handler.handle(cmd)
-
+    config.bus.handle(cmd)
     return "", 201, {"Location": "/issues/" + str(issue_id)}
 
 
 @app.route('/issues/<issue_id>')
 def get_issue(issue_id):
-    session = db.get_session()
-    view_builder = IssueViewBuilder(session)
+    view_builder = config.issue_view_builder
     view = view_builder.fetch(uuid.UUID(issue_id))
     return jsonify(view)
 
 
 @app.route('/issues', methods=['GET'])
 def list_issues():
-    session = db.get_session()
-    view_builder = IssueListBuilder(session)
+    view_builder = config.issue_list_builder
     view = view_builder.fetch()
     return jsonify(view)
+
+
+@app.route('/issues/<issue_id>/assign', methods=['POST'])
+def assign_to_engineer(issue_id):
+    assign_to = request.args.get('engineer')
+    cmd = AssignIssueCommand(issue_id, assign_to, request.user)
+    config.bus.handle(cmd)
+    return "", 200
+
+
+@app.route('/issues/<issue_id>/pick', methods=['POST'])
+def pick_issue(issue_id):
+    cmd = PickIssueCommand(issue_id, request.user)
+    config.bus.handle(cmd)
+    return

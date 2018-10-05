@@ -1,4 +1,7 @@
+from collections import namedtuple
+
 from issues.domain.ports import IssueLog, UnitOfWorkManager, UnitOfWork
+from issues.domain.emails import EmailSender
 
 
 class FakeIssueLog(IssueLog):
@@ -9,8 +12,10 @@ class FakeIssueLog(IssueLog):
     def add(self, issue):
         self.issues.append(issue)
 
-    def get(self, id):
-        return self.issues[id]
+    def _get(self, id):
+        for issue in self.issues:
+            if issue.id == id:
+                return issue
 
     def __len__(self):
         return len(self.issues)
@@ -46,3 +51,24 @@ class FakeUnitOfWork(UnitOfWork, UnitOfWorkManager):
     @property
     def issues(self):
         return self._issues
+
+
+class FakeEmailSender(EmailSender):
+
+    sent_mail = namedtuple('fakes_sent_mail',
+                           ['recipient', 'sender', 'subject', 'body'])
+
+    def __init__(self):
+        self.sent = []
+
+    def _do_send(self, recipient, sender, subject, body):
+        self.sent.append(self.sent_mail(recipient, sender, subject, body))
+
+
+class FakeViewBuilder:
+
+    def __init__(self, view_model):
+        self.view_model = view_model
+
+    def fetch(self, id):
+        return self.view_model

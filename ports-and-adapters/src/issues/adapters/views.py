@@ -23,11 +23,12 @@ class IssueViewBuilder:
             FROM issues
             WHERE issue_id = :id"""
 
-    def __init__(self, session):
-        self.session = session
+    def __init__(self, db):
+        self.db = db
 
     def fetch(self, id):
-        result = self.session.execute(self._q, {'id': id.bytes})
+        session = self.db.get_session()
+        result = session.execute(self._q, {'id': id.bytes})
         record = result.fetchone()
         return dict(record)
 
@@ -40,11 +41,12 @@ class IssueListBuilder:
                  reporter_name
             FROM issues"""
 
-    def __init__(self, session):
-        self.session = session
+    def __init__(self, db):
+        self.db = db
 
     def fetch(self):
-        query = self.session.execute(
+        session = self.db.get_session()
+        query = session.execute(
             'SELECT issue_id, description, reporter_email, reporter_name ' +
             ' FROM issues')
 
