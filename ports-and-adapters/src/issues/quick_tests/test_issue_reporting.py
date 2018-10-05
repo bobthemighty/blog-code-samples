@@ -1,3 +1,5 @@
+import uuid
+
 from .adapters import FakeUnitOfWork
 from issues.services import ReportIssueHandler
 from issues.domain.commands import ReportIssueCommand
@@ -7,6 +9,7 @@ from expects import expect, have_len, equal, be_true
 email = "bob@example.org"
 name = "bob"
 desc = "My mouse won't move"
+id = uuid.uuid4()
 
 
 class When_reporting_an_issue:
@@ -16,9 +19,12 @@ class When_reporting_an_issue:
 
     def because_we_report_a_new_issue(self):
         handler = ReportIssueHandler(self.uow)
-        cmd = ReportIssueCommand(name, email, desc)
+        cmd = ReportIssueCommand(id, name, email, desc)
 
         handler.handle(cmd)
+
+    def it_should_have_recorded_the_id(self):
+        expect(self.uow.issues[0].id).to(equal(id))
 
     def the_handler_should_have_created_a_new_issue(self):
         expect(self.uow.issues).to(have_len(1))

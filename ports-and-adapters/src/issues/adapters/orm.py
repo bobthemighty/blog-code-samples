@@ -1,4 +1,6 @@
+import collections
 import logging
+import uuid
 
 import sqlalchemy
 from sqlalchemy import (Table, Column, MetaData, String, Integer, Text,
@@ -8,6 +10,7 @@ import sqlalchemy.exc
 import sqlalchemy.orm.exc
 
 from sqlalchemy_utils.functions import create_database, drop_database
+from sqlalchemy_utils.types.uuid import UUIDType
 
 from issues.domain.model import Issue, IssueReporter
 from issues.domain.ports import (
@@ -69,6 +72,9 @@ class SqlAlchemy:
 
     def recreate_schema(self):
         drop_database(self.engine.url)
+        self.create_schema()
+
+    def create_schema(self):
         create_database(self.engine.url)
         self.metadata.create_all()
 
@@ -80,7 +86,8 @@ class SqlAlchemy:
 
         IssueReporter.__composite_values__ = lambda i: (i.name, i.email)
         issues = Table('issues', self.metadata,
-                       Column('id', Integer, primary_key=True),
+                       Column('pk', Integer, primary_key=True),
+                       Column('issue_id', UUIDType),
                        Column('reporter_name', String(50)),
                        Column('reporter_email', String(50)),
                        Column('description', Text))
@@ -88,8 +95,10 @@ class SqlAlchemy:
             Issue,
             issues,
             properties={
+                '__pk':
+                issues.c.pk,
                 'id':
-                issues.c.id,
+                issues.c.issue_id,
                 'description':
                 issues.c.description,
                 'reporter':
@@ -109,18 +118,3 @@ class SqlAlchemySessionContext:
 
     def __exit__(self, type, value, traceback):
         self._session_maker.remove()
-
-
-class IssueViewBuilder:
-
-    issue_view_model = namedtuple(
-        'issue_view', ['id', 'description', 'reporter_email', 'reporter_name'])
-
-    def __init__(self, session):
-        self.session = session
-
-    def fetch(self, id):
-        session.execute(
-            'SELECT id, description, reporter_email, reporter_name ' +
-            ' FROM issues ' + ' WHERE issue_id = :id',
-            id=id)

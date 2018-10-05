@@ -9,7 +9,7 @@ class ReportIssueHandler:
 
     def handle(self, cmd):
         reporter = IssueReporter(cmd.reporter_name, cmd.reporter_email)
-        issue = Issue(reporter, cmd.problem_description)
+        issue = Issue(cmd.issue_id, reporter, cmd.problem_description)
 
         with self.uowm.start() as tx:
             tx.issues.add(issue)

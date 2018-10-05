@@ -1,4 +1,5 @@
 import abc
+from uuid import UUID
 
 
 class IssueReporter:
@@ -10,6 +11,8 @@ class IssueReporter:
 
 class Issue:
 
-    def __init__(self, reporter: IssueReporter, description: str) -> None:
+    def __init__(self, issue_id: UUID, reporter: IssueReporter,
+                 description: str) -> None:
+        self.id = issue_id
         self.description = description
         self.reporter = reporter
