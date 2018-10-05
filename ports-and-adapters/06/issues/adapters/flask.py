@@ -30,7 +30,7 @@ def get_issue(issue_id):
 
 @app.route('/issues', methods=['GET'])
 def list_issues():
-    view = views.list_issues(db.config.get_session)
+    view = views.list_issues(db.get_session)
     return jsonify(view)
 
 
