@@ -1,5 +1,7 @@
 import collections
 import uuid
+from .orm import SessionFactory
+from issues.domain import ports
 
 # This little helper function converts the binary data
 # We store in Sqlite back to a uuid.
@@ -15,7 +17,7 @@ def read_uuid(record, column):
     return record
 
 
-class IssueViewBuilder:
+class IssueViewBuilder(ports.IssueViewBuilder):
 
     _q = """SELECT description,
                  reporter_email,
@@ -23,11 +25,11 @@ class IssueViewBuilder:
             FROM issues
             WHERE issue_id = :id"""
 
-    def __init__(self, db):
-        self.db = db
+    def __init__(self, session_factory: SessionFactory):
+        self.session_factory = session_factory
 
     def fetch(self, id):
-        session = self.db.get_session()
+        session = self.session_factory()
         result = session.execute(self._q, {'id': id.bytes})
         record = result.fetchone()
         return dict(record)
@@ -41,11 +43,11 @@ class IssueListBuilder:
                  reporter_name
             FROM issues"""
 
-    def __init__(self, db):
-        self.db = db
+    def __init__(self, session_factory: SessionFactory):
+        self.session_factory = session_factory
 
     def fetch(self):
-        session = self.db.get_session()
+        session = self.session_factory()
         query = session.execute(
             'SELECT issue_id, description, reporter_email, reporter_name ' +
             ' FROM issues')

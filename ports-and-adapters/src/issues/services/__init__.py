@@ -1,10 +1,22 @@
 import issues.domain.emails
 from issues.domain.model import Issue, IssueReporter
 from issues.domain.ports import UnitOfWorkManager, IssueViewBuilder
-from issues.domain import emails
+from issues.domain import emails, messages
+
+import abc
+import typing
+
+TMsg = typing.TypeVar('TMsg')
 
 
-class ReportIssueHandler:
+class Handles(typing.Generic[TMsg]):
+
+    @abc.abstractmethod
+    def handle(self, msg: TMsg):
+        pass
+
+
+class ReportIssueHandler(Handles[messages.ReportIssueCommand]):
 
     def __init__(self, uowm: UnitOfWorkManager):
         self.uowm = uowm
@@ -18,7 +30,7 @@ class ReportIssueHandler:
             tx.commit()
 
 
-class TriageIssueHandler:
+class TriageIssueHandler(Handles[messages.TriageIssueCommand]):
 
     def __init__(self, uowm: UnitOfWorkManager):
         self.uowm = uowm
@@ -30,7 +42,7 @@ class TriageIssueHandler:
             tx.commit()
 
 
-class PickIssueHandler:
+class PickIssueHandler(Handles[messages.PickIssueCommand]):
 
     def __init__(self, uowm: UnitOfWorkManager):
         self.uowm = uowm
@@ -42,7 +54,7 @@ class PickIssueHandler:
             tx.commit()
 
 
-class AssignIssueHandler:
+class AssignIssueHandler(Handles[messages.AssignIssueCommand]):
 
     def __init__(self, uowm: UnitOfWorkManager):
         self.uowm = uowm
@@ -54,7 +66,7 @@ class AssignIssueHandler:
             tx.commit()
 
 
-class IssueAssignedHandler:
+class IssueAssignedHandler(Handles[messages.IssueAssignedToEngineer]):
 
     def __init__(self, view_builder: IssueViewBuilder,
                  sender: emails.EmailSender):

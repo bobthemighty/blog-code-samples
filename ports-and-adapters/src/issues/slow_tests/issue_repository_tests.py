@@ -1,6 +1,6 @@
+from issues.domain.ports import MessageBus
 from issues.domain.model import Issue
 from issues.domain.messages import ReportIssueCommand
-from issues.services import ReportIssueHandler
 from issues.adapters.orm import SqlAlchemy
 from issues.adapters.views import IssueViewBuilder
 
@@ -19,11 +19,11 @@ class When_we_load_a_persisted_issue:
 
         cmd = ReportIssueCommand(self.issue_id, 'fred', 'fred@example.org',
                                  'forgot my password again')
-        handler = ReportIssueHandler(config.db.unit_of_work_manager)
-        handler.handle(cmd)
+        bus = config.container.resolve(MessageBus)
+        bus.handle(cmd)
 
     def because_we_load_the_issues(self):
-        view_builder = IssueViewBuilder(config.db)
+        view_builder = config.container.resolve(IssueViewBuilder)
         self.issue = view_builder.fetch(self.issue_id)
 
     def it_should_have_the_correct_description(self):

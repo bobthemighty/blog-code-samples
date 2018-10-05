@@ -1,5 +1,6 @@
 import collections
 import logging
+import typing
 import uuid
 
 import sqlalchemy
@@ -13,16 +14,15 @@ from sqlalchemy_utils.functions import create_database, drop_database
 from sqlalchemy_utils.types.uuid import UUIDType
 
 from issues.domain.model import Issue, IssueReporter, Assignment
-from issues.domain.ports import (
-    IssueLog,
-    UnitOfWork,
-    UnitOfWorkManager,
-)
+from issues.domain.ports import (IssueLog, UnitOfWork, UnitOfWorkManager,
+                                 MessageBus)
+
+SessionFactory = typing.Callable[[], sqlalchemy.orm.Session]
 
 
 class SqlAlchemyUnitOfWorkManager(UnitOfWorkManager):
 
-    def __init__(self, session_maker, bus):
+    def __init__(self, session_maker: SessionFactory, bus: MessageBus) -> None:
         self.session_maker = session_maker
         self.bus = bus
 
@@ -46,7 +46,7 @@ class IssueRepository(IssueLog):
 
 class SqlAlchemyUnitOfWork(UnitOfWork):
 
-    def __init__(self, sessionfactory, bus):
+    def __init__(self, sessionfactory: SessionFactory, bus: MessageBus) -> None:
         self.sessionfactory = sessionfactory
         self.bus = bus
         event.listen(self.sessionfactory, "after_flush", self.gather_events)
@@ -59,7 +59,6 @@ class SqlAlchemyUnitOfWork(UnitOfWork):
         return self
 
     def __exit__(self, type, value, traceback):
-        self.session.close()
         self.publish_events()
 
     def commit(self):
@@ -96,23 +95,18 @@ class SqlAlchemy:
         self.engine = create_engine(uri)
         self._session_maker = scoped_session(sessionmaker(self.engine),)
 
-    @property
-    def unit_of_work_manager(self):
-        return SqlAlchemyUnitOfWorkManager(self._session_maker, self.bus)
+    def register_in(self, container):
+        container.register(SessionFactory, lambda: self._session_maker)
+        container.register(UnitOfWorkManager, SqlAlchemyUnitOfWorkManager)
 
     def recreate_schema(self):
+        self.configure_mappings()
         drop_database(self.engine.url)
         self.create_schema()
 
     def create_schema(self):
         create_database(self.engine.url)
         self.metadata.create_all()
-
-    def get_session(self):
-        return self._session_maker()
-
-    def associate_message_bus(self, bus):
-        self.bus = bus
 
     def configure_mappings(self):
         self.metadata = MetaData(self.engine)
