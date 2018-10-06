@@ -95,7 +95,7 @@ class When_assigning_an_issue_to_another_engineer(GivenAnAPIServer):
 
     def because_barbara_assigns_the_issue_to_constance(self):
         self.response = requests.post(
-            self.location + '/assign?engineer=constance',
+            self.location + '/assign?engineer=constance@example.com',
             headers={
                 'X-Email': 'barbara@example.org'
             })
@@ -105,6 +105,4 @@ class When_assigning_an_issue_to_another_engineer(GivenAnAPIServer):
 
 
     def there_should_be_an_email(self):
-        # I don't think this is going to work.  the flask debug server is doing weird
-        # things to its output.
-        assert 'Sending email to barbara@example.org' in self.get_server_output()
+        assert 'Sending email to constance@example.com' in self.get_server_output()
