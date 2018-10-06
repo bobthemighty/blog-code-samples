@@ -105,4 +105,6 @@ class When_assigning_an_issue_to_another_engineer(GivenAnAPIServer):
 
 
     def there_should_be_an_email(self):
+        # I don't think this is going to work.  the flask debug server is doing weird
+        # things to its output.
         assert 'Sending email to barbara@example.org' in self.get_server_output()
