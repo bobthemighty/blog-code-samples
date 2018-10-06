@@ -30,6 +30,9 @@ bus.register(msg.TriageIssue,
 bus.register(msg.PickIssue,
              make_pipeline(services.pick_issue, db.start_unit_of_work))
 
+bus.register(msg.AssignIssue,
+             make_pipeline(services.assign_issue, db.start_unit_of_work))
+
 bus.register(msg.IssueAssignedToEngineer,
              make_pipeline(services.on_issue_assigned_to_engineer,
                            partial(views.view_issue, db.get_session),
