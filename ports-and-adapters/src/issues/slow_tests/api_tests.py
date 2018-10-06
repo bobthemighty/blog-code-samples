@@ -4,14 +4,28 @@ from pathlib import Path
 import requests
 import subprocess
 from expects import expect, equal
+from queue import Queue, Empty
+from threading import Thread
+
+def enqueue_output(out, queue):
+    for line in iter(out.readline, b''):
+        queue.put(line)
+    out.close()
+
+
+Q = Queue()
+
 
 class GivenAnAPIServer:
     def given_an_api_server(self):
         cwd = Path(__file__).parent / '../..'
         self.server = subprocess.Popen([
             sys.executable, '-m', 'issues.adapters.flask'
-        ], cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ], cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         self._wait_for_server_to_start()
+        t = Thread(target=enqueue_output, args=(self.server.stdout, Q))
+        t.daemon = True
+        t.start()
 
     def _wait_for_server_to_start(self):
         start = time.time()
@@ -19,17 +33,24 @@ class GivenAnAPIServer:
             try:
                 requests.get('http://localhost:5000')
                 return
-            except Exception as e:
-                print(e, type(e))
+            except requests.exceptions.ConnectionError:
                 time.sleep(0.2)
-        stdout, stderr = '', ''
+        out = ''
         rc = self.server.poll()
         if rc:
-            stdout, stderr = self.server.stdout.read(), self.server.stderr.read()
+            out = self.server.stdout.read()
         raise Exception(
-            f'server did not start, return code was {rc}.\n'
-            f'stdout:\n{stdout}\n\nstderr:\n{stderr}\n'
+            f'server did not start, return code was {rc}, output:\n{out}'
         )
+
+    def get_server_output(self):
+        out = ''
+        try:
+            while True:
+                out += Q.get_nowait().decode()
+        except Empty:
+            pass
+        return out
 
     def cleanup_server(self):
         self.server.kill()
@@ -81,3 +102,7 @@ class When_assigning_an_issue_to_another_engineer(GivenAnAPIServer):
 
     def it_should_be_fine(self):
         expect(self.response.status_code).to(equal(200))
+
+
+    def there_should_be_an_email(self):
+        assert 'Sending email to barbara@example.org' in self.get_server_output()
