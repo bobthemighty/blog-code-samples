@@ -15,9 +15,19 @@ def enqueue_output(out, queue):
 
 Q = Queue()
 
+def _server_is_listening():
+    try:
+        requests.get('http://localhost:5000')
+        return True
+    except requests.exceptions.ConnectionError:
+        return False
+
+
 
 class GivenAnAPIServer:
+
     def given_an_api_server(self):
+        assert not _server_is_listening()
         cwd = Path(__file__).parent / '../..'
         self.server = subprocess.Popen([
             sys.executable, '-m', 'issues.adapters.flask'
@@ -30,11 +40,9 @@ class GivenAnAPIServer:
     def _wait_for_server_to_start(self):
         start = time.time()
         while time.time() < start + 3:
-            try:
-                requests.get('http://localhost:5000')
+            if _server_is_listening():
                 return
-            except requests.exceptions.ConnectionError:
-                time.sleep(0.2)
+            time.sleep(0.2)
         out = ''
         rc = self.server.poll()
         if rc:
